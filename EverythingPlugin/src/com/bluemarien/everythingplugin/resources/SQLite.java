@@ -9,7 +9,7 @@ import java.sql.SQLException;
  * This class...
  * 
  * @author AnthonyFarina
- * @version 2020.05.07
+ * @version 2020.06.11
  */
 public class SQLite {
 
@@ -21,6 +21,7 @@ public class SQLite {
 	
 	public SQLite() {
 		// Initialize fields.
+		createDatabase("test.db");
 	}
 	
 	public void checkDataBase() {
@@ -39,7 +40,18 @@ public class SQLite {
 		// Modify an entry in the database.
 	}
 	
-	private void createDatabase() {
-		// Create a new database.
+	private void createDatabase(String databaseName) {
+		String url = "jdbc:sqlite:./plugins/EverythingPlugin/" + databaseName;
+		
+		try (Connection conn = DriverManager.getConnection(url)) {
+            if (conn != null) {
+                DatabaseMetaData meta = conn.getMetaData();
+                System.out.println("The driver name is " + meta.getDriverName());
+                System.out.println("A new database has been created.");
+            }
+        }
+		catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
 	}
 }

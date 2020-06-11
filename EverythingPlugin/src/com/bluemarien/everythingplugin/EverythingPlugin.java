@@ -5,6 +5,9 @@ import com.bluemarien.everythingplugin.commands.Feed;
 import com.bluemarien.everythingplugin.commands.Heal;
 import com.bluemarien.everythingplugin.resources.SQLite;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.logging.Logger;
 
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -14,7 +17,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * This class represents the EverythingPlugin running on a Spigot server.
  * 
  * @author Anthony Farina
- * @version 2020.04.13
+ * @version 2020.06.11
  */
 public class EverythingPlugin extends JavaPlugin {
 	
@@ -33,6 +36,21 @@ public class EverythingPlugin extends JavaPlugin {
 		
 		logger.info("Commands loaded!");
 		
+		// Check if EveryPlugin directory exists.
+		File file = new File("./plugins/EverythingPlugin");
+		
+		if (!file.isDirectory()) {
+			file.mkdir();
+		}
+		
+		// Check if the database exists.
+		if (!Files.exists(Paths.get("./plugins/EverythingPlugin/test.db"))) {
+			// Make a new database.
+			db = new SQLite();
+		}
+		
+		// Connect to database.
+		
 		logger.info(pdFile.getName() + " v" + pdFile.getVersion() + " has been successfully enabled!");	
 	}
 	
@@ -42,6 +60,7 @@ public class EverythingPlugin extends JavaPlugin {
 	public void onDisable() {
 		PluginDescriptionFile pdFile = getDescription();
 		Logger logger = getLogger();
+		
 		
 		logger.info(pdFile.getName() + " v" + pdFile.getVersion() + " has been successfully disabled!");
 	}
