@@ -10,8 +10,8 @@ import org.bukkit.entity.Player;
 /**
  * This class represents the exp command.
  * 
- * @author AnthonyFarina
- * @version 2020.04.13
+ * @author Anthony Farina
+ * @version 2020.06.11
  */
 public class Exp implements CommandExecutor {
 
