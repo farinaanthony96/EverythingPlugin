@@ -3,6 +3,7 @@ package com.bluemarien.everythingplugin;
 import com.bluemarien.everythingplugin.commands.Exp;
 import com.bluemarien.everythingplugin.commands.Feed;
 import com.bluemarien.everythingplugin.commands.Heal;
+import com.bluemarien.everythingplugin.resources.EventListener;
 import com.bluemarien.everythingplugin.resources.SQLite;
 
 import java.io.IOException;
@@ -17,7 +18,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * This class represents the EverythingPlugin running on a Spigot server.
  * 
  * @author Anthony Farina
- * @version 2020.06.12
+ * @version 2020.06.15
  */
 public class EverythingPlugin extends JavaPlugin {
 	
@@ -60,7 +61,10 @@ public class EverythingPlugin extends JavaPlugin {
 		}
 		
 		// Connect to expBank database.
+		expBankDB = new SQLite();
 		
+		// Register event listener.
+		getServer().getPluginManager().registerEvents(new EventListener(), this);
 		
 		logger.info(pdFile.getName() + " v" + pdFile.getVersion() + " has been successfully enabled!");	
 	}
