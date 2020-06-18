@@ -73,7 +73,7 @@ public class Xpbank implements CommandExecutor {
 						return true;
 					}
 					
-					// Check if the player 
+					// Check if the player is trying to deposit levels they have.
 					if (levelsToDeposit > commandPlayer.getExpToLevel()) {
 						
 					}
