@@ -12,7 +12,7 @@ import com.bluemarien.everythingplugin.EverythingPlugin;
  * This class represents the xpbank command.
  * 
  * @author Anthony Farina
- * @version 2020.06.18
+ * @version 2020.06.19
  */
 public class Xpbank implements CommandExecutor {
 
@@ -30,7 +30,7 @@ public class Xpbank implements CommandExecutor {
 	 */
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 
-		// Check that the command being run is "/feed".
+		// Check that the command being run is "/xpbank".
 		if (commandLabel.equals("xpbank")) {
 			// Check if the entity running the command is a player.
 			if (!(sender instanceof Player)) {
@@ -43,7 +43,7 @@ public class Xpbank implements CommandExecutor {
 			// The player only typed "/xpbank".
 			if (args.length == 0) {
 				// Return the amount of levels stored in the bank.
-				// TODO
+				commandPlayer.sendMessage(ChatColor.GOLD + "XP Bank Balance: " + EverythingPlugin.expBankDB.get(commandPlayer));
 				return true;
 			}
 			// The player typed "/xpbank (something)".

@@ -18,20 +18,21 @@ import org.bukkit.plugin.java.JavaPlugin;
  * This class represents the EverythingPlugin running on a Spigot server.
  * 
  * @author Anthony Farina
- * @version 2020.06.18
+ * @version 2020.06.19
  */
 public class EverythingPlugin extends JavaPlugin {
 	
-	// Declare reference to the plugin's description file "plugin.yml".
-	private PluginDescriptionFile pdFile;
-	
 	/**
-	 * 
+	 * Make sure other classes have access to the logger, xpbank database, and 
+	 * paths to the plugin's directory.
 	 */
 	public static Logger logger;
 	public static SQLite expBankDB;
 	public static final String pluginFolderPath = "./plugins/EverythingPlugin";
 	public static final String databaseName = "xpBankDatabase.db";
+	
+	// Declare reference to the plugin's description file "plugin.yml".
+	private PluginDescriptionFile pdFile;
 
 	/**
 	 * Properly enable the plugin.
@@ -78,7 +79,8 @@ public class EverythingPlugin extends JavaPlugin {
 	
 	
 	/**
-	 * Register the plugin's commands.
+	 * Register the plugin's commands. Don't forget to add them to the plugin.yml
+	 * file after adding the command here!
 	 */
 	public void loadCommands() {
 		getCommand("heal").setExecutor(new Heal());

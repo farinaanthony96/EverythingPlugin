@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;  
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -18,18 +19,21 @@ import com.bluemarien.everythingplugin.EverythingPlugin;
  * about players on the server this plugin is installed with.
  * 
  * @author Anthony Farina
- * @version 2020.06.18
+ * @version 2020.06.19
  */
 public class SQLite {
+	
+	// Make sure other classes can access the DEPOSIT and WITHDRAWAL enumerations.
+	public enum BankAction {DEPOSIT, WITHDRAWAL}
 
 	/**
-	 * Initialize database path and declare connection to database.
+	 * Initialize database paths/name and declare connection to database.
 	 */
 	private final String databasePath = EverythingPlugin.pluginFolderPath + "/"
 									  + EverythingPlugin.databaseName;
-	private Connection conn;
 	private final String localPathURL = "jdbc:sqlite:" + databasePath;
 	private final String tableName = "xpBankTable";
+	private Connection conn;
 	
 	/**
 	 * Connects to an existing expBank database or, if necessary, creates a
@@ -55,31 +59,55 @@ public class SQLite {
 	/**
 	 * Insert a record into the database.
 	 */
-	public void insert(Player p) {
-		String uuid = p.getUniqueId().toString();
-		String statement = "INSERT INTO " + tableName + "(UUID,XP) VALUES(?,?)";
+	public void insert(Player player) {
+		String uuid = player.getUniqueId().toString();
+		String query = "INSERT INTO " + tableName + "(UUID,XP) VALUES(?,?)";
 
-        try (PreparedStatement pstmt = conn.prepareStatement(statement)) {
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setString(1, uuid);
-            pstmt.setInt(2, 0);
-            if (pstmt.executeUpdate() > 0)
-            	EverythingPlugin.logger.info("I've added " + p.getName() + " to " + tableName + "!");
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            pstmt.setInt(2, 1);
+            
+            if (pstmt.executeUpdate() > 0) {
+            	EverythingPlugin.logger.info("I've added " + player.getName() + " to " + tableName + "!");
+            }
+        }
+        catch (SQLException e) {
+        	EverythingPlugin.logger.info(e.getMessage());
         }
 	}
 	
 	/**
-	 * Remove a record from the database.
+	 * Gets a record from the database.
+	 * 
+	 * @param player
+	 * 			The player to get the record for.
+	 * 
+	 * @return Returns the levels that the given player has in their xpbank.
 	 */
-	public void remove() {
-		// TODO
+	public int get(Player player) {
+		String uuid = player.getUniqueId().toString();
+		String query = "SELECT UUID, XP\n"
+				     + "FROM " + tableName + "\n"
+				     + "WHERE UUID LIKE '" + uuid + "';";
+		int levelsInBank = 0;
+		
+		// 
+		try (Statement statement = conn.createStatement();
+			 ResultSet result = statement.executeQuery(query)) {
+			result.next();
+			levelsInBank = result.getInt("XP");
+		}
+		catch (SQLException e) {
+			EverythingPlugin.logger.info(e.getMessage());
+		}
+		
+		return levelsInBank;
 	}
 	
 	/**
 	 * Modify an existing record in the database.
 	 */
-	public void modify() {
+	public void modify(Player player, BankAction action) {
 		// TODO
 	}
 	
@@ -120,8 +148,8 @@ public class SQLite {
 			
 			// SQL statement for creating a new table.
 	        String statement = "CREATE TABLE IF NOT EXISTS " + tableName + " (\n"
-	                + "	UUID text,\n"
-	                + "	XP integer\n"
+	                + "	UUID text UNIQUE,\n"
+	                + "	XP integer CHECK(XP >= 0)\n"
 	                + ");";
 
 	        try (Statement stmt = conn.createStatement()) {
