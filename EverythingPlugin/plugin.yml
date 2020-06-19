@@ -18,3 +18,8 @@ commands:
       permission: everythingplugin.exp
       permission-message: You do not have permission to run that command.
       usage: /exp set <level> [player] | /exp give <level> <player1> [player2] | /exp clear [player]
+   xpbank:
+      description: Stores the player's experience levels in a virtual bank.
+      permission: everythingplugin.xpbank
+      permission-message: You do not have permission to run that command.
+      usage: /xpbank | /xpbank <create|top10> | /xpbank <deposit|withdrawal> <levels>

@@ -18,7 +18,7 @@ import com.bluemarien.everythingplugin.EverythingPlugin;
  * about players on the server this plugin is installed with.
  * 
  * @author Anthony Farina
- * @version 2020.06.15
+ * @version 2020.06.18
  */
 public class SQLite {
 

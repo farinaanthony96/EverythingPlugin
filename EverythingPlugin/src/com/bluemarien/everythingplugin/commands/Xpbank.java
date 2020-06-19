@@ -8,6 +8,12 @@ import org.bukkit.entity.Player;
 
 import com.bluemarien.everythingplugin.EverythingPlugin;
 
+/**
+ * This class represents the xpbank command.
+ * 
+ * @author Anthony Farina
+ * @version 2020.06.18
+ */
 public class Xpbank implements CommandExecutor {
 
 	/**
@@ -22,14 +28,13 @@ public class Xpbank implements CommandExecutor {
 	 * 
 	 * @return Returns true if the command was run successfully, false otherwise.
 	 */
-	@Override
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 
 		// Check that the command being run is "/feed".
 		if (commandLabel.equals("xpbank")) {
 			// Check if the entity running the command is a player.
 			if (!(sender instanceof Player)) {
-				sender.sendMessage(ChatColor.RED + "You must be a player to use the command /xpbank!");
+				sender.sendMessage(ChatColor.RED + "You must be a player to use that command!");
 				return true;
 			}
 
@@ -46,8 +51,10 @@ public class Xpbank implements CommandExecutor {
 				// Check the argument to the command.
 				if (args[0].equals("create")) {
 					// Create a new record in the database, if possible.
-					// TODO
-				} else if (args[0].equals("top10")) {
+					EverythingPlugin.expBankDB.insert(commandPlayer);
+					return true;
+				}
+				else if (args[0].equals("top10")) {
 					// Show the top 10 highest xpbanks.
 					// TODO
 				}
@@ -73,21 +80,20 @@ public class Xpbank implements CommandExecutor {
 						return true;
 					}
 					
-					// Check if the player is trying to deposit levels they have.
+					// Check if the player is not trying to deposit more levels than they have.
 					if (levelsToDeposit > commandPlayer.getExpToLevel()) {
-						
+						commandPlayer.sendMessage(ChatColor.RED + "You don't have that many levels to deposit!");
+						return true;
 					}
+					
+					// Deposit levels into player's xpbank.
+					// TODO
 				}
 				// Check if the player is trying to withdrawal levels from their bank.
 				else if (args[0].equals("withdrawal")) {
-					
+					// TODO
 				}
 			}
-
-			// The player gave too many parameters.
-			commandPlayer.sendMessage(ChatColor.RED + "Too many parameters! Proper syntax is:");
-			commandPlayer.sendMessage(ChatColor.RED + "/feed [player]");
-			return true;
 		}
 
 		// The command was not handled.

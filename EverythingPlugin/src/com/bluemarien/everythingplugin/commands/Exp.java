@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
  * This class represents the exp command.
  * 
  * @author Anthony Farina
- * @version 2020.06.11
+ * @version 2020.06.18
  */
 public class Exp implements CommandExecutor {
 
@@ -35,13 +35,13 @@ public class Exp implements CommandExecutor {
 		if (commandLabel.equals("exp")) {
 			// Check if the entity running the command is a player.
 			if (!(sender instanceof Player)) {
-				sender.sendMessage(ChatColor.RED + "You must be a player to use the command /exp!");
+				sender.sendMessage(ChatColor.RED + "You must be a player to use that command!");
 				return true;
 			}
 			
 			Player commandPlayer = (Player)sender;
 
-			// The player only typed "/exp".
+			// The player typed "/exp".
 			if (args.length == 0) {
 				commandPlayer.sendMessage(ChatColor.RED + "Incorrect syntax! Proper syntax is:");
 				commandPlayer.sendMessage(ChatColor.RED + "/exp set <level> [player]");

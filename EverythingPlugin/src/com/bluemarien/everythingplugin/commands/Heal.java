@@ -13,7 +13,7 @@ import org.bukkit.potion.PotionEffectType;
  * This class represents the heal command.
  * 
  * @author Anthony Farina
- * @version 2020.04.13
+ * @version 2020.06.18
  */
 public class Heal implements CommandExecutor {
 
@@ -43,13 +43,13 @@ public class Heal implements CommandExecutor {
 			
 			Player commandPlayer = (Player)sender;
 
-			// The player only typed "/heal".
+			// The player typed "/heal".
 			if (args.length == 0) {
 				// Heal the player running the command.
 				healPlayer(commandPlayer);
 				return true;
 			}
-			// The player typed "/heal [player]".
+			// The player typed "/heal (something)".
 			else if (args.length == 1) {
 				Player receiver = Bukkit.getServer().getPlayer(args[0]);
 				

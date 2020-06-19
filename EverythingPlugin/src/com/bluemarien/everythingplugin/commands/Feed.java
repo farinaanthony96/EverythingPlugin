@@ -12,7 +12,7 @@ import org.bukkit.potion.PotionEffectType;
  * This class represents the feed command.
  * 
  * @author Anthony Farina
- * @version 2020.04.13
+ * @version 2020.06.18
  */
 public class Feed implements CommandExecutor {
 
@@ -36,13 +36,13 @@ public class Feed implements CommandExecutor {
 		if (commandLabel.equals("feed")) {
 			// Check if the entity running the command is a player.
 			if (!(sender instanceof Player)) {
-				sender.sendMessage(ChatColor.RED + "You must be a player to use the command /feed!");
+				sender.sendMessage(ChatColor.RED + "You must be a player to use that command!");
 				return true;
 			}
 			
 			Player commandPlayer = (Player)sender;
 			
-			// The player only typed "/feed".
+			// The player typed "/feed".
 			if (args.length == 0) {
 				// Feed the player running the command.
 				feedPlayer(commandPlayer);
