@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.bluemarien.everythingplugin.EverythingPlugin;
+import com.bluemarien.everythingplugin.resources.SQLite;
 
 /**
  * This class represents the xpbank command.
@@ -57,6 +58,7 @@ public class Xpbank implements CommandExecutor {
 				else if (args[0].equals("top10")) {
 					// Show the top 10 highest xpbanks.
 					// TODO
+					return true;
 				}
 			}
 			// The player typed "/xpbank (something) (something)".
@@ -81,18 +83,60 @@ public class Xpbank implements CommandExecutor {
 					}
 					
 					// Check if the player is not trying to deposit more levels than they have.
-					if (levelsToDeposit > commandPlayer.getExpToLevel()) {
+					if (levelsToDeposit > commandPlayer.getLevel()) {
 						commandPlayer.sendMessage(ChatColor.RED + "You don't have that many levels to deposit!");
 						return true;
 					}
 					
 					// Deposit levels into player's xpbank.
-					// TODO
+					commandPlayer.setLevel(commandPlayer.getLevel() - levelsToDeposit);
+					EverythingPlugin.expBankDB.modify(commandPlayer, SQLite.BankAction.DEPOSIT, levelsToDeposit);
+					
+					commandPlayer.sendMessage(ChatColor.GOLD + "Successfully deposited " + levelsToDeposit + " levels.");
+					commandPlayer.sendMessage(ChatColor.GOLD + "XP Bank Balance: " + EverythingPlugin.expBankDB.get(commandPlayer));
+					return true;
 				}
-				// Check if the player is trying to withdrawal levels from their bank.
+				// Check if the player is trying to withdrawal levels from their xp bank.
 				else if (args[0].equals("withdrawal")) {
-					// TODO
+					// Check if the levels the player provided is an integer.
+					int levelsToWithdrawal= 0;
+					
+					try {
+						levelsToWithdrawal = Integer.parseInt(args[1]);
+					}
+					catch (NumberFormatException e) {
+						commandPlayer.sendMessage(ChatColor.RED + "You must provide a positive integer level!");
+						return true;
+					}
+					
+					// Check if the player provided a positive integer level.
+					if (levelsToWithdrawal < 1) {
+						commandPlayer.sendMessage(ChatColor.RED + "You must provide a positive integer level!");
+						return true;
+					}
+					
+					// Check if the player is not trying to withdrawal more levels than they have in their bank.
+					if (levelsToWithdrawal > EverythingPlugin.expBankDB.get(commandPlayer)) {
+						commandPlayer.sendMessage(ChatColor.RED + "You don't have that many levels to withdrawal!");
+						return true;
+					}
+					
+					// Withdrawal levels from the player's xp bank.
+					EverythingPlugin.expBankDB.modify(commandPlayer, SQLite.BankAction.WITHDRAWAL, levelsToWithdrawal);
+					commandPlayer.setLevel(commandPlayer.getLevel() + levelsToWithdrawal);
+					
+					commandPlayer.sendMessage(ChatColor.GOLD + "Successfully withdrew " + levelsToWithdrawal + " levels.");
+					commandPlayer.sendMessage(ChatColor.GOLD + "XP Bank Balance: " + EverythingPlugin.expBankDB.get(commandPlayer));
+					return true;
 				}
+			}
+			// The player typed "/xpbank (something) (something) (something)".
+			else {
+				// The player gave too many parameters.
+				commandPlayer.sendMessage(ChatColor.RED + "Too many parameters! Proper syntax is:");
+				commandPlayer.sendMessage(ChatColor.RED + "/xpbank | /xpbank top10");
+				commandPlayer.sendMessage(ChatColor.RED + "/xpbank <deposit|withdrawal> <levels>");
+				return true;
 			}
 		}
 

@@ -65,7 +65,7 @@ public class SQLite {
 
         try (PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setString(1, uuid);
-            pstmt.setInt(2, 1);
+            pstmt.setInt(2, 0);
             
             if (pstmt.executeUpdate() > 0) {
             	EverythingPlugin.logger.info("I've added " + player.getName() + " to " + tableName + "!");
@@ -106,9 +106,33 @@ public class SQLite {
 	
 	/**
 	 * Modify an existing record in the database.
+	 * 
+	 * @param player
+	 * @param action
+	 * @param levels
 	 */
-	public void modify(Player player, BankAction action) {
-		// TODO
+	public void modify(Player player, BankAction action, int levels) {
+		String uuid = player.getUniqueId().toString();
+		String query = "";
+		
+		if (action == BankAction.DEPOSIT) {
+			query = "UPDATE " + tableName + " SET XP = XP + ? "
+					 + "WHERE UUID LIKE ?";
+		}
+		else if (action == BankAction.WITHDRAWAL) {
+			query = "UPDATE " + tableName + " SET XP = XP - ? "
+					 + "WHERE UUID LIKE ?";
+		}
+
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+        	// 
+            pstmt.setInt(1, levels);
+            pstmt.setString(2, uuid);
+            pstmt.executeUpdate();
+        }
+        catch (SQLException e) {
+        	EverythingPlugin.logger.info(e.getMessage());
+        }
 	}
 	
 	/**
