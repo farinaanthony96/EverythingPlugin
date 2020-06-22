@@ -63,7 +63,7 @@ public class EverythingPlugin extends JavaPlugin {
 			}
 		}
 
-		// Connect to the XP bank database.
+		// Connect to or create a new XP bank database.
 		xpBankDB = new XpBankDatabase();
 
 		// We enabled the plugin successfully.
