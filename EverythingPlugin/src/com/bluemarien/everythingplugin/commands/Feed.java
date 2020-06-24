@@ -8,6 +8,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 
+import com.bluemarien.everythingplugin.EverythingPlugin;
+
+import net.milkbowl.vault.permission.Permission;
+
 /**
  * This class represents the feed command. The feed command is used to fill a
  * player's hunger bar.
@@ -43,6 +47,12 @@ public class Feed implements CommandExecutor {
 
 			// The entity running the command is a player.
 			Player commandPlayer = (Player) sender;
+			Permission perms = EverythingPlugin.getPermissions();
+			
+			if (!perms.has(commandPlayer, "everythingplugin.feed")) {
+				commandPlayer.sendMessage(ChatColor.DARK_RED + "You do not have permission.");
+				return true;
+			}
 
 			// Check if the player typed "/feed".
 			if (args.length == 0) {
