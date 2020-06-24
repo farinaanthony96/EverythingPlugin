@@ -26,6 +26,12 @@
         <id>spigot-repo</id>
         <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
     </repository>
+    
+    <!-- This adds the Vault repository to the build -->
+    <repository>
+		<id>jitpack.io</id>
+		<url>https://jitpack.io</url>
+	</repository>
   </repositories>
 
 <dependencies>
@@ -35,6 +41,14 @@
            <artifactId>spigot-api</artifactId>
            <version>1.15.2-R0.1-SNAPSHOT</version>
            <scope>provided</scope>
+    </dependency>
+    
+    <!-- This adds the Vault API artifact to the build -->
+    <dependency>
+        <groupId>com.github.MilkBowl</groupId>
+        <artifactId>VaultAPI</artifactId>
+        <version>1.7</version>
+        <scope>provided</scope>
     </dependency>
 </dependencies>
 

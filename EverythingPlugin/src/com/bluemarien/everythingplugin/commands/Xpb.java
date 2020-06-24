@@ -16,7 +16,7 @@ import com.bluemarien.everythingplugin.resources.XpBankDatabase;
  * withdraw experience levels.
  * 
  * @author Anthony Farina
- * @version 2020.06.19
+ * @version 2020.06.24
  */
 public class Xpb implements CommandExecutor {
 
@@ -45,12 +45,13 @@ public class Xpb implements CommandExecutor {
 
 			// The entity running the command is a player.
 			Player commandPlayer = (Player) sender;
+			XpBankDatabase xpBank = EverythingPlugin.getXpBankDatabase();
 
 			// Check if the player only typed "/xpbank".
 			if (args.length == 0) {
 				// Return the amount of levels stored in the player's xp bank.
 				commandPlayer.sendMessage(
-						ChatColor.GOLD + "XP Bank Balance: " + EverythingPlugin.xpBankDB.getXPBankBalance(commandPlayer));
+						ChatColor.GOLD + "XP Bank Balance: " + xpBank.getXPBankBalance(commandPlayer));
 				return true;
 			}
 			// Check if the player typed "/xpbank (something)".
@@ -58,7 +59,7 @@ public class Xpb implements CommandExecutor {
 				// Check if the player typed "/xpbank create".
 				if (args[0].equals("create")) {
 					// Create a new record in the xp bank database, if possible.
-					EverythingPlugin.xpBankDB.createRecord(commandPlayer);
+					xpBank.createRecord(commandPlayer);
 					return true;
 				}
 				// Check if the player typed "/xpbank top10".
@@ -98,11 +99,11 @@ public class Xpb implements CommandExecutor {
 
 					// Deposit levels into the player's xp bank.
 					commandPlayer.setLevel(commandPlayer.getLevel() - levelsToDeposit);
-					EverythingPlugin.xpBankDB.modifyXPBankBalance(commandPlayer, XpBankDatabase.BankAction.DEPOSIT, levelsToDeposit);
+					xpBank.modifyXPBankBalance(commandPlayer, XpBankDatabase.BankAction.DEPOSIT, levelsToDeposit);
 					commandPlayer
 							.sendMessage(ChatColor.GOLD + "Successfully deposited " + levelsToDeposit + " levels.");
 					commandPlayer.sendMessage(
-							ChatColor.GOLD + "XP Bank Balance: " + EverythingPlugin.xpBankDB.getXPBankBalance(commandPlayer));
+							ChatColor.GOLD + "XP Bank Balance: " + xpBank.getXPBankBalance(commandPlayer));
 					return true;
 				}
 				// Check if the player typed "/xpbank withdraw <levels>".
@@ -127,20 +128,20 @@ public class Xpb implements CommandExecutor {
 
 					// Check if the player is not trying to withdraw more levels than they have in
 					// their bank.
-					if (levelsToWithdraw > EverythingPlugin.xpBankDB.getXPBankBalance(commandPlayer)) {
+					if (levelsToWithdraw > xpBank.getXPBankBalance(commandPlayer)) {
 						commandPlayer.sendMessage(ChatColor.RED + "You don't have that many levels to withdraw!");
 						return true;
 					}
 
 					// Withdraw levels from the player's xp bank.
-					EverythingPlugin.xpBankDB.modifyXPBankBalance(commandPlayer, XpBankDatabase.BankAction.WITHDRAW,
+					xpBank.modifyXPBankBalance(commandPlayer, XpBankDatabase.BankAction.WITHDRAW,
 							levelsToWithdraw);
 					commandPlayer.setLevel(commandPlayer.getLevel() + levelsToWithdraw);
 
 					commandPlayer
 							.sendMessage(ChatColor.GOLD + "Successfully withdrew " + levelsToWithdraw + " levels.");
 					commandPlayer.sendMessage(
-							ChatColor.GOLD + "XP Bank Balance: " + EverythingPlugin.xpBankDB.getXPBankBalance(commandPlayer));
+							ChatColor.GOLD + "XP Bank Balance: " + xpBank.getXPBankBalance(commandPlayer));
 					return true;
 				}
 			}

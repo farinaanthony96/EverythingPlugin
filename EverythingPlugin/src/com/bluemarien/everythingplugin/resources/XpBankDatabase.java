@@ -20,7 +20,7 @@ import com.bluemarien.everythingplugin.EverythingPlugin;
  * handle database functionality.
  * 
  * @author Anthony Farina
- * @version 2020.06.19
+ * @version 2020.06.24
  */
 public class XpBankDatabase {
 
@@ -32,7 +32,7 @@ public class XpBankDatabase {
 	/**
 	 * Initialize database paths/name and declare the connection to database.
 	 */
-	private final String databasePath = EverythingPlugin.pluginFolderPath + "/" + EverythingPlugin.xpBankDBName;
+	private final String databasePath = EverythingPlugin.getPluginFolderPath() + "/" + EverythingPlugin.getXpBankDatabaseName();
 	private final String localPathURL = "jdbc:sqlite:" + databasePath;
 	private final String tableName = "xpBankTable";
 	private Connection conn;
@@ -55,7 +55,7 @@ public class XpBankDatabase {
 			}
 			// An error occurred connecting to the database.
 			catch (SQLException e) {
-				EverythingPlugin.logger.info(e.getMessage());
+				EverythingPlugin.getEPLogger().info(e.getMessage());
 			}
 		}
 	}
@@ -78,13 +78,13 @@ public class XpBankDatabase {
 
 			// Make sure the query was successful.
 			if (pstmt.executeUpdate() > 0) {
-				EverythingPlugin.logger
+				EverythingPlugin.getEPLogger()
 						.info("The player " + player.getName() + " has been added to the " + tableName + " database!");
 			}
 		}
 		// An error occurred executing the query to the database.
 		catch (SQLException e) {
-			EverythingPlugin.logger.info(e.getMessage());
+			EverythingPlugin.getEPLogger().info(e.getMessage());
 		}
 	}
 
@@ -111,7 +111,7 @@ public class XpBankDatabase {
 		// An error occurred executing the query to the database, or while getting the
 		// player's xp bank balance.
 		catch (SQLException e) {
-			EverythingPlugin.logger.info(e.getMessage());
+			EverythingPlugin.getEPLogger().info(e.getMessage());
 		}
 
 		return levelsInBank;
@@ -150,7 +150,7 @@ public class XpBankDatabase {
 		}
 		// An error occurred while preparing or executing the query to the database.
 		catch (SQLException e) {
-			EverythingPlugin.logger.info(e.getMessage());
+			EverythingPlugin.getEPLogger().info(e.getMessage());
 		}
 	}
 
@@ -164,7 +164,7 @@ public class XpBankDatabase {
 		}
 		// An error occurred closing the connection to the database.
 		catch (SQLException e) {
-			EverythingPlugin.logger.info(e.getMessage());
+			EverythingPlugin.getEPLogger().info(e.getMessage());
 		}
 	}
 
@@ -201,19 +201,19 @@ public class XpBankDatabase {
 			}
 			// An error occurred executing the query to the database.
 			catch (SQLException e) {
-				EverythingPlugin.logger.info(e.getMessage());
+				EverythingPlugin.getEPLogger().info(e.getMessage());
 			}
 
 			// Check if the creation and connection to the new database was successful.
 			if (conn != null) {
 				DatabaseMetaData meta = conn.getMetaData();
-				EverythingPlugin.logger.info("The driver name is " + meta.getDriverName());
-				EverythingPlugin.logger.info("A new database has been created.");
+				EverythingPlugin.getEPLogger().info("The driver name is " + meta.getDriverName());
+				EverythingPlugin.getEPLogger().info("A new database has been created.");
 			}
 		}
 		// An error occurred creating the database.
 		catch (SQLException e) {
-			EverythingPlugin.logger.info(e.getMessage());
+			EverythingPlugin.getEPLogger().info(e.getMessage());
 		}
 	}
 }

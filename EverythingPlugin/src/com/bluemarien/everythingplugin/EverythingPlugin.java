@@ -6,12 +6,15 @@ import com.bluemarien.everythingplugin.commands.Heal;
 import com.bluemarien.everythingplugin.commands.Xpb;
 import com.bluemarien.everythingplugin.resources.XpBankDatabase;
 
+import net.milkbowl.vault.permission.Permission;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.logging.Logger;
 
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -19,22 +22,29 @@ import org.bukkit.plugin.java.JavaPlugin;
  * The plugin's description file is named "plugin.yml".
  * 
  * @author Anthony Farina
- * @version 2020.06.19
+ * @version 2020.06.24
  */
 public class EverythingPlugin extends JavaPlugin {
 
 	/**
-	 * Make sure other classes have static access to the logger, XP Bank database,
-	 * and paths to the plugin's directory.
+	 * Declare plugin's logger and description file "plugin.yml".
 	 */
-	public static Logger logger;
-	public static XpBankDatabase xpBankDB;
-	public static final String pluginFolderPath = "./plugins/EverythingPlugin";
-	public static final String xpBankDBName = "XPBankDatabase.db";
-
-	// Declare reference to the plugin's description file "plugin.yml".
+	private static Logger logger;
 	private PluginDescriptionFile pdFile;
+	
+	/**
+	 * Declare xp bank fields.
+	 */
+	private static XpBankDatabase xpBankDB;
+	private static final String pluginFolderPath = "./plugins/EverythingPlugin";
+	private static final String xpBankDBName = "XPBankDatabase.db";
 
+	/**
+	 * Declare a reference to the permissions manager for the plugin.
+	 */
+	private static Permission perms = null;
+
+	
 	/**
 	 * Properly enable the plugin.
 	 */
@@ -43,10 +53,27 @@ public class EverythingPlugin extends JavaPlugin {
 		pdFile = getDescription();
 		logger = getLogger();
 
-		// Load the plugin commands.
-		logger.info("Loading commands...");
+		// Load the plugin.
+		logger.info("Loading EverythingPlugin...");
+		
+		// Load the plugin's commands.
 		loadCommands();
-		logger.info("Commands loaded!");
+		
+		// Check if Vault is installed on the server.
+		if (getServer().getPluginManager().getPlugin("Vault") == null) {
+			logger.severe("Vault not found! Disabling plugin.");
+			getServer().getPluginManager().disablePlugin(this);
+			return;
+		}
+		
+		// Check if there is a valid permissions plugin installed.
+		if (!setupPermissions()) {
+			logger.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+		}
+		
+		logger.info("EverythingPlugin loaded!");
 
 		// Check if the EverythingPlugin directory exists in the "plugins" directory.
 		if (!Files.isDirectory(Paths.get(pluginFolderPath))) {
@@ -56,7 +83,7 @@ public class EverythingPlugin extends JavaPlugin {
 			}
 			// Something went wrong creating the EverythingPlugin directory.
 			catch (IOException e) {
-				logger.info("An error occurred while creating the EverythingPlugin directory! Disabling plugin...");
+				logger.info("An error occurred while creating the EverythingPlugin directory! Disabling plugin.");
 				logger.info(e.getMessage());
 				onDisable();
 				return;
@@ -83,6 +110,51 @@ public class EverythingPlugin extends JavaPlugin {
 	}
 
 	/**
+	 * Returns the permission API object to check players for permissions.
+	 * 
+	 * @return The permission object associated with permissions for the plugin.
+	 */
+	public static Permission getPermissions() {
+        return perms;
+    }
+	
+	/**
+	 * Returns the xp bank database object.
+	 * 
+	 * @return The xp bank database object.
+	 */
+	public static XpBankDatabase getXpBankDatabase() {
+		return xpBankDB;
+	}
+	
+	/**
+	 * Returns this plugin's logger for output to the server console.
+	 * 
+	 * @return This plugin's logger object.
+	 */
+	public static Logger getEPLogger() {
+		return logger;
+	}
+	
+	/**
+	 * Returns the plugin's folder path in the "plugins" directory.
+	 * 
+	 * @return The plugin's folder path in the "plugins" directory.
+	 */
+	public static String getPluginFolderPath() {
+		return pluginFolderPath;
+	}
+	
+	/**
+	 * Returns the name of the xp bank database.
+	 * 
+	 * @return The name of the xp bank database.
+	 */
+	public static String getXpBankDatabaseName() {
+		return xpBankDBName;
+	}
+	
+	/**
 	 * Register the plugin's commands with Spigot. Don't forget to add them to the
 	 * plugin.yml file after adding them here!
 	 */
@@ -93,4 +165,15 @@ public class EverythingPlugin extends JavaPlugin {
 		getCommand("exp").setExecutor(new Exp());
 		getCommand("xpb").setExecutor(new Xpb());
 	}
+	
+	/**
+	 * Sets up the permissions manager from Vault.
+	 * 
+	 * @return True if there is a valid permissions manager, false otherwise.
+	 */
+	private boolean setupPermissions() {
+        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+        perms = rsp.getProvider();
+        return perms != null;
+    }
 }
