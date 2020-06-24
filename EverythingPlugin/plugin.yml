@@ -5,16 +5,13 @@ api-version: 1.15
 commands:
    heal:
       description: Heals the player to full health.
-      permission: everythingplugin.heal
-      permission-message: You do not have permission to run that command.
       usage: /heal [player]
    feed:
       description: Feeds the player to full hunger.
-      permission: everythingplugin.feed
-      permission-message: You do not have permission to run that command.
       usage: /feed [player]
    exp:
       description: Gives the player experience levels.
-      permission: everythingplugin.exp
-      permission-message: You do not have permission to run that command.
       usage: /exp set <level> [player] | /exp give <level> <player1> [player2] | /exp clear [player]
+   xpb:
+      description: Stores the player's experience levels in a virtual bank.
+      usage: /xpbank | /xpbank <create|top10> | /xpbank <deposit|withdrawal> <levels>
