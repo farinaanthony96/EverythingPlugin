@@ -22,7 +22,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * The plugin's description file is named "plugin.yml".
  * 
  * @author Anthony Farina
- * @version 2020.06.24
+ * @version 2020.06.25
  */
 public class EverythingPlugin extends JavaPlugin {
 
@@ -48,7 +48,6 @@ public class EverythingPlugin extends JavaPlugin {
 	/**
 	 * Properly enable the plugin.
 	 */
-	@Override
 	public void onEnable() {
 		// Load plugin description file (plugin.yml) and initialize the logger.
 		pdFile = getDescription();
@@ -62,14 +61,14 @@ public class EverythingPlugin extends JavaPlugin {
 		
 		// Check if Vault is installed on the server.
 		if (getServer().getPluginManager().getPlugin("Vault") == null) {
-			logger.severe("Vault not found! Disabling plugin.");
+			logger.info("Vault not found! Disabling plugin.");
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
 		
 		// Check if there is a valid permissions plugin installed.
 		if (!setupPermissions()) {
-			logger.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
+			logger.info(String.format("Could not get a valid permissions plugin from Vault! Disabling plugin."));
             getServer().getPluginManager().disablePlugin(this);
             return;
 		}
@@ -86,7 +85,7 @@ public class EverythingPlugin extends JavaPlugin {
 			catch (IOException e) {
 				logger.info("An error occurred while creating the EverythingPlugin directory! Disabling plugin.");
 				logger.info(e.getMessage());
-				onDisable();
+				getServer().getPluginManager().disablePlugin(this);
 				return;
 			}
 		}
@@ -101,11 +100,12 @@ public class EverythingPlugin extends JavaPlugin {
 	/**
 	 * Properly disable the plugin.
 	 */
-	@Override
 	public void onDisable() {
 		// Close the XP bank database properly.
-		xpBankDB.closeXPBankDatabase();
-
+		if (xpBankDB != null) {
+			xpBankDB.closeXPBankDatabase();
+		}
+		
 		// We disabled the plugin successfully.
 		logger.info(pdFile.getName() + " v" + pdFile.getVersion() + " has been successfully disabled!");
 		return;

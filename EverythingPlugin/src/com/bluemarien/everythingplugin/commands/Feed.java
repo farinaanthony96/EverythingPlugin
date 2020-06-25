@@ -17,7 +17,7 @@ import net.milkbowl.vault.permission.Permission;
  * player's hunger bar.
  * 
  * @author Anthony Farina
- * @version 2020.06.19
+ * @version 2020.06.25
  */
 public class Feed implements CommandExecutor {
 

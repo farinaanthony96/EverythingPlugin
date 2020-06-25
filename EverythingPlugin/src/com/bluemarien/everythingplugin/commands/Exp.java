@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
  * set, or clear other player's (or your own) experience levels.
  * 
  * @author Anthony Farina
- * @version 2020.06.19
+ * @version 2020.06.25
  */
 public class Exp implements CommandExecutor {
 

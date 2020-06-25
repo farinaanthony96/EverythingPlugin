@@ -16,7 +16,7 @@ import com.bluemarien.everythingplugin.resources.XpBankDatabase;
  * withdraw experience levels.
  * 
  * @author Anthony Farina
- * @version 2020.06.24
+ * @version 2020.06.25
  */
 public class Xpb implements CommandExecutor {
 

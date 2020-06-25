@@ -20,7 +20,7 @@ import com.bluemarien.everythingplugin.EverythingPlugin;
  * handle database functionality.
  * 
  * @author Anthony Farina
- * @version 2020.06.24
+ * @version 2020.06.25
  */
 public class XpBankDatabase {
 
@@ -35,7 +35,7 @@ public class XpBankDatabase {
 	private final String databasePath = EverythingPlugin.getPluginFolderPath() + "/" + EverythingPlugin.getXpBankDatabaseName();
 	private final String localPathURL = "jdbc:sqlite:" + databasePath;
 	private final String tableName = "xpBankTable";
-	private Connection conn;
+	private Connection conn = null;
 
 	/**
 	 * Connects to an existing expBank database or, if necessary, creates a database
@@ -55,7 +55,9 @@ public class XpBankDatabase {
 			}
 			// An error occurred connecting to the database.
 			catch (SQLException e) {
+				EverythingPlugin.getEPLogger().info("Error connecting to the xp bank database! Disabling plugin.");
 				EverythingPlugin.getEPLogger().info(e.getMessage());
+				// Bukkit.getServer().getPluginManager().disablePlugin(EverythingPlugin);
 			}
 		}
 	}
@@ -84,6 +86,7 @@ public class XpBankDatabase {
 		}
 		// An error occurred executing the query to the database.
 		catch (SQLException e) {
+			EverythingPlugin.getEPLogger().info("An error occurred adding " + player.getName() + " to the xp bank database!");
 			EverythingPlugin.getEPLogger().info(e.getMessage());
 		}
 	}
@@ -111,6 +114,7 @@ public class XpBankDatabase {
 		// An error occurred executing the query to the database, or while getting the
 		// player's xp bank balance.
 		catch (SQLException e) {
+			EverythingPlugin.getEPLogger().info("An error occurred accessing " + player.getName() + "'s xp bank from the database!");
 			EverythingPlugin.getEPLogger().info(e.getMessage());
 		}
 
@@ -150,6 +154,7 @@ public class XpBankDatabase {
 		}
 		// An error occurred while preparing or executing the query to the database.
 		catch (SQLException e) {
+			EverythingPlugin.getEPLogger().info("An error occurred updating " + player.getName() + "'s xp bank from the database!");
 			EverythingPlugin.getEPLogger().info(e.getMessage());
 		}
 	}
@@ -164,6 +169,7 @@ public class XpBankDatabase {
 		}
 		// An error occurred closing the connection to the database.
 		catch (SQLException e) {
+			EverythingPlugin.getEPLogger().info("An error occurred closing the xp bank database!");
 			EverythingPlugin.getEPLogger().info(e.getMessage());
 		}
 	}
@@ -201,7 +207,9 @@ public class XpBankDatabase {
 			}
 			// An error occurred executing the query to the database.
 			catch (SQLException e) {
+				EverythingPlugin.getEPLogger().info("An error occurred creating the table for the xp bank database! Disabling plugin.");
 				EverythingPlugin.getEPLogger().info(e.getMessage());
+				// Bukkit.getServer().getPluginManager().disablePlugin(EverythingPlugin);
 			}
 
 			// Check if the creation and connection to the new database was successful.
@@ -213,7 +221,9 @@ public class XpBankDatabase {
 		}
 		// An error occurred creating the database.
 		catch (SQLException e) {
+			EverythingPlugin.getEPLogger().info("An error occurred creating a new xp bank database! Disabling plugin.");
 			EverythingPlugin.getEPLogger().info(e.getMessage());
+			// Bukkit.getServer().getPluginManager().disablePlugin(EverythingPlugin);
 		}
 	}
 }

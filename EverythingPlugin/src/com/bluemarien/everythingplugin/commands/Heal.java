@@ -18,7 +18,7 @@ import net.milkbowl.vault.permission.Permission;
  * to full health.
  * 
  * @author Anthony Farina
- * @version 2020.06.19
+ * @version 2020.06.25
  */
 public class Heal implements CommandExecutor {
 
