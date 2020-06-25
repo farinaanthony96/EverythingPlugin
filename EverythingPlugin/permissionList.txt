@@ -1,0 +1,5 @@
+everythingplugin.feed - Player has access to /feed
+everythingplugin.feed.others - Player has access to /feed (player)
+everythingplugin.heal - Player has access to /heal
+everythingplugin.heal.others - Player has access to /heal (player)
+everythingplugin.exp.clear - Player has access to /exp clear

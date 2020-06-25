@@ -9,6 +9,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 
+import com.bluemarien.everythingplugin.EverythingPlugin;
+
+import net.milkbowl.vault.permission.Permission;
+
 /**
  * This class represents the heal command. This command is used to heal a player
  * to full health.
@@ -41,16 +45,30 @@ public class Heal implements CommandExecutor {
 				return true;
 			}
 
+			// The entity running the command is a player.
 			Player commandPlayer = (Player) sender;
+			Permission perms = EverythingPlugin.getPermissions();
 
 			// Check if the player typed "/heal".
 			if (args.length == 0) {
+				// Check if the player has permission to run this command.
+				if (!perms.has(commandPlayer, "everythingplugin.heal")) {
+					commandPlayer.sendMessage(ChatColor.DARK_RED + "You do not have permission to run that command.");
+					return true;
+				}
+				
 				// Heal the player running the command.
 				healPlayer(commandPlayer);
 				return true;
 			}
 			// Check if the player typed "/heal [player]".
 			else if (args.length == 1) {
+				// Check if the player has permission to run this command.
+				if (!perms.has(commandPlayer, "everythingplugin.heal.others")) {
+					commandPlayer.sendMessage(ChatColor.DARK_RED + "You do not have permission to run that command.");
+					return true;
+				}
+				
 				// Get the receiving player.
 				Player receiver = Bukkit.getServer().getPlayer(args[0]);
 

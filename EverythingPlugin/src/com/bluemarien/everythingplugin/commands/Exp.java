@@ -42,6 +42,7 @@ public class Exp implements CommandExecutor {
 
 			// The entity running the command is a player.
 			Player commandPlayer = (Player) sender;
+			// Permission perms = EverythingPlugin.getPermissions();
 
 			// Check if the player typed "/exp".
 			if (args.length == 0) {

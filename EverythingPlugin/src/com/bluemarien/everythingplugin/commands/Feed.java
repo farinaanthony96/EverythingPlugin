@@ -48,20 +48,27 @@ public class Feed implements CommandExecutor {
 			// The entity running the command is a player.
 			Player commandPlayer = (Player) sender;
 			Permission perms = EverythingPlugin.getPermissions();
-			
-			if (!perms.has(commandPlayer, "everythingplugin.feed")) {
-				commandPlayer.sendMessage(ChatColor.DARK_RED + "You do not have permission.");
-				return true;
-			}
 
 			// Check if the player typed "/feed".
 			if (args.length == 0) {
+				// Check if the player has the permission to run this command.
+				if (!perms.has(commandPlayer, "everythingplugin.feed")) {
+					commandPlayer.sendMessage(ChatColor.DARK_RED + "You do not have permission to run that command.");
+					return true;
+				}
+				
 				// Feed the player.
 				feedPlayer(commandPlayer);
 				return true;
 			}
 			// Check if the player typed "/feed [player]".
 			else if (args.length == 1) {
+				// Check if the player has the permission to run this command.
+				if (!perms.has(commandPlayer, "everythingplugin.feed.others")) {
+					commandPlayer.sendMessage(ChatColor.DARK_RED + "You do not have permission to run that command.");
+					return true;
+				}
+				
 				// Get the receiving player.
 				Player receiver = Bukkit.getServer().getPlayer(args[0]);
 

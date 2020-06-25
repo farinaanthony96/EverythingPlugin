@@ -48,6 +48,7 @@ public class EverythingPlugin extends JavaPlugin {
 	/**
 	 * Properly enable the plugin.
 	 */
+	@Override
 	public void onEnable() {
 		// Load plugin description file (plugin.yml) and initialize the logger.
 		pdFile = getDescription();
@@ -100,6 +101,7 @@ public class EverythingPlugin extends JavaPlugin {
 	/**
 	 * Properly disable the plugin.
 	 */
+	@Override
 	public void onDisable() {
 		// Close the XP bank database properly.
 		xpBankDB.closeXPBankDatabase();
