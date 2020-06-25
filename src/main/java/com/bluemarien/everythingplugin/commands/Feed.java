@@ -41,7 +41,7 @@ public class Feed implements CommandExecutor {
             // Check if the entity running the command is a player.
             if (!(sender instanceof Player)) {
                 // The entity running the command is not a player.
-                sender.sendMessage(ChatColor.RED + "You must be a player to use that command!");
+                sender.sendMessage("You must be a player to use that command!");
                 return true;
             }
 
@@ -53,19 +53,20 @@ public class Feed implements CommandExecutor {
             if (args.length == 0) {
                 // Check if the player has the permission to run this command.
                 if (!perms.has(commandPlayer, "everythingplugin.feed")) {
-                    commandPlayer.sendMessage(ChatColor.DARK_RED + "You do not have permission to run that command.");
+                    commandPlayer.sendMessage(ChatColor.RED + "You do not have permission to run that command.");
                     return true;
                 }
 
                 // Feed the player.
                 feedPlayer(commandPlayer);
+                commandPlayer.sendMessage(ChatColor.GOLD + "You have been fed.");
                 return true;
             }
             // Check if the player typed "/feed [player]".
             else if (args.length == 1) {
                 // Check if the player has the permission to run this command.
                 if (!perms.has(commandPlayer, "everythingplugin.feed.others")) {
-                    commandPlayer.sendMessage(ChatColor.DARK_RED + "You do not have permission to run that command.");
+                    commandPlayer.sendMessage(ChatColor.RED + "You do not have permission to run that command.");
                     return true;
                 }
 
@@ -80,6 +81,8 @@ public class Feed implements CommandExecutor {
 
                 // Feed the receiving player.
                 feedPlayer(receiver);
+                receiver.sendMessage(ChatColor.GOLD + "You have been fed by " + commandPlayer.getName() + ".");
+                commandPlayer.sendMessage(ChatColor.GOLD + "You have fed " + receiver.getName() + ".");
                 return true;
             }
 

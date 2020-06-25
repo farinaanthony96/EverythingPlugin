@@ -1,13 +1,15 @@
 package com.bluemarien.everythingplugin.commands;
 
-import com.bluemarien.everythingplugin.EverythingPlugin;
-import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import com.bluemarien.everythingplugin.EverythingPlugin;
+
+import net.milkbowl.vault.permission.Permission;
 
 /**
  * This class represents the exp command. The exp command can be used to give,
@@ -38,7 +40,7 @@ public class Exp implements CommandExecutor {
             // Check if the entity running the command is a player.
             if (!(sender instanceof Player)) {
                 // The entity running the command is not a player.
-                sender.sendMessage(ChatColor.RED + "You must be a player to use that command!");
+                sender.sendMessage("You must be a player to use that command!");
                 return true;
             }
 
@@ -49,10 +51,10 @@ public class Exp implements CommandExecutor {
             // Check if the player typed "/exp".
             if (args.length == 0) {
                 // Show the player the usage of "/exp".
-                commandPlayer.sendMessage(ChatColor.RED + "Usage of \"/exp\":");
-                commandPlayer.sendMessage(ChatColor.RED + "/exp clear [player]");
-                commandPlayer.sendMessage(ChatColor.RED + "/exp set <level> [player]");
-                commandPlayer.sendMessage(ChatColor.RED + "/exp give <level> <player>");
+                commandPlayer.sendMessage(ChatColor.GOLD + "Usage of \"/exp\":");
+                commandPlayer.sendMessage(ChatColor.GOLD + "/exp clear [player]");
+                commandPlayer.sendMessage(ChatColor.GOLD + "/exp set <level> [player]");
+                commandPlayer.sendMessage(ChatColor.GOLD + "/exp give <level> <player>");
                 return true;
             }
             // Check if the player typed "/exp (something)".
@@ -61,22 +63,23 @@ public class Exp implements CommandExecutor {
                 if (args[0].equals("clear")) {
                     // Check if the player has the permission to run this command.
                     if (!perms.has(commandPlayer, "everythingplugin.exp.clear")) {
-                        commandPlayer.sendMessage(ChatColor.DARK_RED + "You do not have permission to run that command.");
+                        commandPlayer.sendMessage(ChatColor.RED + "You do not have permission to run that command.");
                         return true;
                     }
 
                     // Clear the player's experience levels.
                     commandPlayer.setExp(0f);
                     commandPlayer.setLevel(0);
+                    commandPlayer.sendMessage(ChatColor.GOLD + "Your experience levels have been cleared.");
                     return true;
                 }
                 // Check if the player typed "/exp help" or "/exp ?".
                 else if (args[0].equals("help") || args[0].equals("?")) {
                     // Show the player the usage of "/exp".
-                    commandPlayer.sendMessage(ChatColor.RED + "Usage of \"/exp\":");
-                    commandPlayer.sendMessage(ChatColor.RED + "/exp clear [player]");
-                    commandPlayer.sendMessage(ChatColor.RED + "/exp set <level> [player]");
-                    commandPlayer.sendMessage(ChatColor.RED + "/exp give <level> <player>");
+                    commandPlayer.sendMessage(ChatColor.GOLD + "Usage of \"/exp\":");
+                    commandPlayer.sendMessage(ChatColor.GOLD + "/exp clear [player]");
+                    commandPlayer.sendMessage(ChatColor.GOLD + "/exp set <level> [player]");
+                    commandPlayer.sendMessage(ChatColor.GOLD + "/exp give <level> <player>");
                     return true;
                 }
 
@@ -93,7 +96,7 @@ public class Exp implements CommandExecutor {
                 if (args[0].equals("set")) {
                     // Check if the player has the permission to run this command.
                     if (!perms.has(commandPlayer, "everythingplugin.exp.set")) {
-                        commandPlayer.sendMessage(ChatColor.DARK_RED + "You do not have permission to run that command.");
+                        commandPlayer.sendMessage(ChatColor.RED + "You do not have permission to run that command.");
                         return true;
                     }
 
@@ -122,7 +125,7 @@ public class Exp implements CommandExecutor {
                 else if (args[0].equals("clear")) {
                     // Check if the player has the permission to run this command.
                     if (!perms.has(commandPlayer, "everythingplugin.exp.clear.others")) {
-                        commandPlayer.sendMessage(ChatColor.DARK_RED + "You do not have permission to run that command.");
+                        commandPlayer.sendMessage(ChatColor.RED + "You do not have permission to run that command.");
                         return true;
                     }
 
@@ -180,7 +183,7 @@ public class Exp implements CommandExecutor {
                 if (args[0].equals("give")) {
                     // Check if the player has the permission to run this command.
                     if (!perms.has(commandPlayer, "everythingplugin.exp.give")) {
-                        commandPlayer.sendMessage(ChatColor.DARK_RED + "You do not have permission to run that command.");
+                        commandPlayer.sendMessage(ChatColor.RED + "You do not have permission to run that command.");
                         return true;
                     }
 
@@ -200,7 +203,7 @@ public class Exp implements CommandExecutor {
                 else if (args[0].equals("set")) {
                     // Check if the player has the permission to run this command.
                     if (!perms.has(commandPlayer, "everythingplugin.exp.set.others")) {
-                        commandPlayer.sendMessage(ChatColor.DARK_RED + "You do not have permission to run that command.");
+                        commandPlayer.sendMessage(ChatColor.RED + "You do not have permission to run that command.");
                         return true;
                     }
 

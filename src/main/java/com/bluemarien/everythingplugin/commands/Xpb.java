@@ -1,6 +1,5 @@
 package com.bluemarien.everythingplugin.commands;
 
-import net.milkbowl.vault.permission.Permission;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -9,6 +8,8 @@ import org.bukkit.entity.Player;
 
 import com.bluemarien.everythingplugin.EverythingPlugin;
 import com.bluemarien.everythingplugin.backend.XpBankDatabase;
+
+import net.milkbowl.vault.permission.Permission;
 
 /**
  * This class represents the xpbank command. This command is used as a virtual
@@ -40,7 +41,7 @@ public class Xpb implements CommandExecutor {
         if (commandLabel.equals("xpb")) {
             // Check if the entity running the command is a player.
             if (!(sender instanceof Player)) {
-                sender.sendMessage(ChatColor.RED + "You must be a player to use that command!");
+                sender.sendMessage("You must be a player to use that command!");
                 return true;
             }
 
@@ -59,13 +60,11 @@ public class Xpb implements CommandExecutor {
             // Check if the player only typed "/xpb".
             if (args.length == 0) {
                 // Show the player the usage of "/xpb".
-                commandPlayer.sendMessage(ChatColor.RED + "Usage of \"/xpb\":");
-                commandPlayer.sendMessage(ChatColor.RED + "/xpb | /xpb <help | ?>");
-                commandPlayer.sendMessage(ChatColor.RED + "/xpb <balance | b> | /xpb top10");
-                commandPlayer.sendMessage(ChatColor.RED + "/xpb <deposit | d> <levels> | /xpb <withdraw | w> <levels>");
+                commandPlayer.sendMessage(ChatColor.GOLD + "Usage of \"/xpb\":");
+                commandPlayer.sendMessage(ChatColor.GOLD + "/xpb | /xpb <help | ?>");
+                commandPlayer.sendMessage(ChatColor.GOLD + "/xpb <balance | b> | /xpb top10");
+                commandPlayer.sendMessage(ChatColor.GOLD + "/xpb <deposit | d> <levels> | /xpb <withdraw | w> <levels>");
                 return true;
-
-
             }
             // Check if the player typed "/xpb (something)".
             else if (args.length == 1) {
@@ -85,6 +84,13 @@ public class Xpb implements CommandExecutor {
                     // TODO Show the top 10 highest xpbanks.
                     return true;
                 }
+
+                // The player typed an invalid subcommand.
+                commandPlayer.sendMessage(ChatColor.RED + "Unknown subcommand! Proper syntax is:");
+                commandPlayer.sendMessage(ChatColor.RED + "/xpb | /xpb <help | ?>");
+                commandPlayer.sendMessage(ChatColor.RED + "/xpb <balance | b> | /xpb top10");
+                commandPlayer.sendMessage(ChatColor.RED + "/xpb <deposit | d> <levels> | /xpb <withdraw | w> <levels>");
+                return true;
             }
             // Check if the player typed "/xpb (something) (something)".
             else if (args.length == 2) {
@@ -156,6 +162,13 @@ public class Xpb implements CommandExecutor {
                     commandPlayer.sendMessage(ChatColor.GOLD + "XP Bank Balance: " + xpBank.getXPBankBalance(commandPlayer));
                     return true;
                 }
+
+                // The player typed an invalid subcommand.
+                commandPlayer.sendMessage(ChatColor.RED + "Unknown subcommand! Proper syntax is:");
+                commandPlayer.sendMessage(ChatColor.RED + "/xpb | /xpb <help | ?>");
+                commandPlayer.sendMessage(ChatColor.RED + "/xpb <balance | b> | /xpb top10");
+                commandPlayer.sendMessage(ChatColor.RED + "/xpb <deposit | d> <levels> | /xpb <withdraw | w> <levels>");
+                return true;
             }
 
             // The player gave too many parameters.

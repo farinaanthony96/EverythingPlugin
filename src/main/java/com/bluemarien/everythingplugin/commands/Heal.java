@@ -41,7 +41,7 @@ public class Heal implements CommandExecutor {
         if (commandLabel.equals("heal")) {
             // Check if the entity running the command is a player.
             if (!(sender instanceof Player)) {
-                sender.sendMessage(ChatColor.RED + "You must be a player to use that command!");
+                sender.sendMessage("You must be a player to use that command!");
                 return true;
             }
 
@@ -53,19 +53,20 @@ public class Heal implements CommandExecutor {
             if (args.length == 0) {
                 // Check if the player has permission to run this command.
                 if (!perms.has(commandPlayer, "everythingplugin.heal")) {
-                    commandPlayer.sendMessage(ChatColor.DARK_RED + "You do not have permission to run that command.");
+                    commandPlayer.sendMessage(ChatColor.RED + "You do not have permission to run that command.");
                     return true;
                 }
 
                 // Heal the player running the command.
                 healPlayer(commandPlayer);
+                commandPlayer.sendMessage(ChatColor.GOLD + "You have been healed.");
                 return true;
             }
             // Check if the player typed "/heal [player]".
             else if (args.length == 1) {
                 // Check if the player has permission to run this command.
                 if (!perms.has(commandPlayer, "everythingplugin.heal.others")) {
-                    commandPlayer.sendMessage(ChatColor.DARK_RED + "You do not have permission to run that command.");
+                    commandPlayer.sendMessage(ChatColor.RED + "You do not have permission to run that command.");
                     return true;
                 }
 
@@ -80,6 +81,8 @@ public class Heal implements CommandExecutor {
 
                 // Heal the receiving player.
                 healPlayer(receiver);
+                receiver.sendMessage(ChatColor.GOLD + "You have been healed by " + commandPlayer.getName() + ".");
+                commandPlayer.sendMessage(ChatColor.GOLD + "You have healed " + receiver.getName() + ".");
                 return true;
             }
 
