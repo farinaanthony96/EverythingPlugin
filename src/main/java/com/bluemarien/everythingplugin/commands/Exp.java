@@ -1,5 +1,7 @@
 package com.bluemarien.everythingplugin.commands;
 
+import com.bluemarien.everythingplugin.EverythingPlugin;
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -42,24 +44,39 @@ public class Exp implements CommandExecutor {
 
             // The entity running the command is a player.
             Player commandPlayer = (Player) sender;
-            // Permission perms = EverythingPlugin.getPermissions();
+            Permission perms = EverythingPlugin.getPermissions();
 
             // Check if the player typed "/exp".
             if (args.length == 0) {
-                // The player gave too few parameters.
-                commandPlayer.sendMessage(ChatColor.RED + "Too few parameters! Proper syntax is:");
+                // Show the player the usage of "/exp".
+                commandPlayer.sendMessage(ChatColor.RED + "Usage of \"/exp\":");
                 commandPlayer.sendMessage(ChatColor.RED + "/exp clear [player]");
                 commandPlayer.sendMessage(ChatColor.RED + "/exp set <level> [player]");
-                commandPlayer.sendMessage(ChatColor.RED + "/exp give <level> <player1> [player2]");
+                commandPlayer.sendMessage(ChatColor.RED + "/exp give <level> <player>");
                 return true;
             }
             // Check if the player typed "/exp (something)".
             else if (args.length == 1) {
                 // Check if the player typed "/exp clear".
                 if (args[0].equals("clear")) {
+                    // Check if the player has the permission to run this command.
+                    if (!perms.has(commandPlayer, "everythingplugin.exp.clear")) {
+                        commandPlayer.sendMessage(ChatColor.DARK_RED + "You do not have permission to run that command.");
+                        return true;
+                    }
+
                     // Clear the player's experience levels.
                     commandPlayer.setExp(0f);
                     commandPlayer.setLevel(0);
+                    return true;
+                }
+                // Check if the player typed "/exp help" or "/exp ?".
+                else if (args[0].equals("help") || args[0].equals("?")) {
+                    // Show the player the usage of "/exp".
+                    commandPlayer.sendMessage(ChatColor.RED + "Usage of \"/exp\":");
+                    commandPlayer.sendMessage(ChatColor.RED + "/exp clear [player]");
+                    commandPlayer.sendMessage(ChatColor.RED + "/exp set <level> [player]");
+                    commandPlayer.sendMessage(ChatColor.RED + "/exp give <level> <player>");
                     return true;
                 }
 
@@ -67,13 +84,19 @@ public class Exp implements CommandExecutor {
                 commandPlayer.sendMessage(ChatColor.RED + "Unknown subcommand! Proper syntax is:");
                 commandPlayer.sendMessage(ChatColor.RED + "/exp clear [player]");
                 commandPlayer.sendMessage(ChatColor.RED + "/exp set <level> [player]");
-                commandPlayer.sendMessage(ChatColor.RED + "/exp give <level> <player1> [player2]");
+                commandPlayer.sendMessage(ChatColor.RED + "/exp give <level> <player>");
                 return true;
             }
             // Check if the player typed "/exp (something) (something)".
             else if (args.length == 2) {
                 // Check if the player typed "/exp set <level>".
                 if (args[0].equals("set")) {
+                    // Check if the player has the permission to run this command.
+                    if (!perms.has(commandPlayer, "everythingplugin.exp.set")) {
+                        commandPlayer.sendMessage(ChatColor.DARK_RED + "You do not have permission to run that command.");
+                        return true;
+                    }
+
                     int level = 0;
 
                     // Try to get a valid experience level from the player.
@@ -97,6 +120,12 @@ public class Exp implements CommandExecutor {
                 }
                 // Check if the player typed "/exp clear [player]".
                 else if (args[0].equals("clear")) {
+                    // Check if the player has the permission to run this command.
+                    if (!perms.has(commandPlayer, "everythingplugin.exp.clear.others")) {
+                        commandPlayer.sendMessage(ChatColor.DARK_RED + "You do not have permission to run that command.");
+                        return true;
+                    }
+
                     // Get the receiving player from the second "/exp" parameter.
                     Player receiver = Bukkit.getServer().getPlayer(args[1]);
 
@@ -116,7 +145,7 @@ public class Exp implements CommandExecutor {
                 commandPlayer.sendMessage(ChatColor.RED + "Unknown subcommand! Proper syntax is:");
                 commandPlayer.sendMessage(ChatColor.RED + "/exp clear [player]");
                 commandPlayer.sendMessage(ChatColor.RED + "/exp set <level> [player]");
-                commandPlayer.sendMessage(ChatColor.RED + "/exp give <level> <player1> [player2]");
+                commandPlayer.sendMessage(ChatColor.RED + "/exp give <level> <player>");
                 return true;
             }
             // Check if the player typed "/exp (something) (something) (something)".
@@ -149,6 +178,12 @@ public class Exp implements CommandExecutor {
 
                 // Check if the player typed "/exp give <level> <player>".
                 if (args[0].equals("give")) {
+                    // Check if the player has the permission to run this command.
+                    if (!perms.has(commandPlayer, "everythingplugin.exp.give")) {
+                        commandPlayer.sendMessage(ChatColor.DARK_RED + "You do not have permission to run that command.");
+                        return true;
+                    }
+
                     // Check if the player has enough experience levels to give to the receiving
                     // player.
                     if (commandPlayer.getLevel() < level) {
@@ -161,8 +196,14 @@ public class Exp implements CommandExecutor {
                     receiver.setLevel(receiver.getLevel() + level);
                     return true;
                 }
-                // Check if the player typed "/exp set <level> <player>".
+                // Check if the player typed "/exp set <level> [player]".
                 else if (args[0].equals("set")) {
+                    // Check if the player has the permission to run this command.
+                    if (!perms.has(commandPlayer, "everythingplugin.exp.set.others")) {
+                        commandPlayer.sendMessage(ChatColor.DARK_RED + "You do not have permission to run that command.");
+                        return true;
+                    }
+
                     // Set the receiving player's experience level.
                     receiver.setLevel(level);
                     return true;
@@ -170,70 +211,18 @@ public class Exp implements CommandExecutor {
 
                 // The player gave an invalid subcommand.
                 commandPlayer.sendMessage(ChatColor.RED + "Unknown subcommand! Proper syntax is:");
-                commandPlayer.sendMessage(ChatColor.RED + "/exp set <level> [player]");
-                commandPlayer.sendMessage(ChatColor.RED + "/exp give <level> <player1> [player2]");
                 commandPlayer.sendMessage(ChatColor.RED + "/exp clear [player]");
+                commandPlayer.sendMessage(ChatColor.RED + "/exp set <level> [player]");
+                commandPlayer.sendMessage(ChatColor.RED + "/exp give <level> <player>");
                 return true;
             }
-            // Check if the player typed "/exp (something) (something) (something)
-            // (something)".
-            else if (args.length == 4) {
-                // Check if the player typed "/exp give <level> <player1> [player2]".
-                if (args[1].equals("give")) {
-                    int level = 0;
-
-                    // Try to get a valid experience level from the player.
-                    try {
-                        level = Integer.parseInt(args[1]);
-
-                        // Check if the experience level is negative.
-                        if (level < 0) {
-                            throw new NumberFormatException();
-                        }
-                    }
-                    // The experience level given was not a non-negative integer.
-                    catch (NumberFormatException e) {
-                        commandPlayer.sendMessage(ChatColor.RED + "Exp level must be a non-negative integer!");
-                        return true;
-                    }
-
-                    // Get the giving and receiving players for the command.
-                    Player giver = Bukkit.getServer().getPlayer(args[2]);
-                    Player receiver = Bukkit.getServer().getPlayer(args[3]);
-
-                    // Check if the giving player is on the server.
-                    if (giver == null) {
-                        commandPlayer.sendMessage(ChatColor.RED + "The player " + args[2] + " is not on this server!");
-                        return true;
-                    }
-                    // Check if the receiving player is on the server.
-                    else if (receiver == null) {
-                        commandPlayer.sendMessage(ChatColor.RED + "The player " + args[3] + " is not on this server!");
-                        return true;
-                    }
-
-                    // Check if the giving player has enough experience levels to give to the
-                    // receiving player.
-                    if (giver.getLevel() < level) {
-                        // The giving player doesn't have enough experience levels.
-                        commandPlayer.sendMessage(ChatColor.RED + "The player " + giver.getName()
-                                + " doesn't have enough experience levels!");
-                        return true;
-                    }
-
-                    // Transfer experience levels from the giving player to the receiving player.
-                    giver.setLevel(giver.getLevel() - level);
-                    receiver.setLevel(receiver.getLevel() + level);
-                    return true;
-                }
-            }
-            // The player typed more than 4 arguments.
+            // The player typed more than 3 arguments.
             else {
                 // The player gave too many arguments.
                 commandPlayer.sendMessage(ChatColor.RED + "Too many arguments! Proper syntax is:");
                 commandPlayer.sendMessage(ChatColor.RED + "/exp clear [player]");
                 commandPlayer.sendMessage(ChatColor.RED + "/exp set <level> [player]");
-                commandPlayer.sendMessage(ChatColor.RED + "/exp give <level> <player1> [player2]");
+                commandPlayer.sendMessage(ChatColor.RED + "/exp give <level> <player>");
                 return true;
             }
         }

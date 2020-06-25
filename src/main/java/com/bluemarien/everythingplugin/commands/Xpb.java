@@ -1,5 +1,6 @@
 package com.bluemarien.everythingplugin.commands;
 
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -45,14 +46,26 @@ public class Xpb implements CommandExecutor {
 
             // The entity running the command is a player.
             Player commandPlayer = (Player) sender;
+            Permission perms = EverythingPlugin.getPermissions();
+
+            // Check if the player has the permission to run this command.
+            if (!perms.has(commandPlayer, "everythingplugin.xpb")) {
+                commandPlayer.sendMessage(ChatColor.RED + "You do not have permission to run that command.");
+                return true;
+            }
+
             XpBankDatabase xpBank = EverythingPlugin.getXpBankDatabase();
 
             // Check if the player only typed "/xpb".
             if (args.length == 0) {
-                // Return the amount of levels stored in the player's xp bank.
-                commandPlayer.sendMessage(
-                        ChatColor.GOLD + "XP Bank Balance: " + xpBank.getXPBankBalance(commandPlayer));
+                // Show the player the usage of "/xpb".
+                commandPlayer.sendMessage(ChatColor.RED + "Usage of \"/xpb\":");
+                commandPlayer.sendMessage(ChatColor.RED + "/xpb | /xpb <help | ?>");
+                commandPlayer.sendMessage(ChatColor.RED + "/xpb <balance | b> | /xpb top10");
+                commandPlayer.sendMessage(ChatColor.RED + "/xpb <deposit | d> <levels> | /xpb <withdraw | w> <levels>");
                 return true;
+
+
             }
             // Check if the player typed "/xpb (something)".
             else if (args.length == 1) {
@@ -62,17 +75,21 @@ public class Xpb implements CommandExecutor {
                     xpBank.createRecord(commandPlayer);
                     return true;
                 }
+                else if (args[0].equals("balance") || args[0].equals("b")) {
+                    // Return the amount of levels stored in the player's xp bank.
+                    commandPlayer.sendMessage(ChatColor.GOLD + "XP Bank Balance: " + xpBank.getXPBankBalance(commandPlayer));
+                    return true;
+                }
                 // Check if the player typed "/xpb top10".
                 else if (args[0].equals("top10")) {
-                    // Show the top 10 highest xpbanks.
-                    // TODO
+                    // TODO Show the top 10 highest xpbanks.
                     return true;
                 }
             }
             // Check if the player typed "/xpb (something) (something)".
             else if (args.length == 2) {
                 // Check if the player typed "/xpb deposit <levels>".
-                if (args[0].equals("deposit")) {
+                if (args[0].equals("deposit") || args[0].equals("d")) {
                     // Check if the levels the player provided is an integer.
                     int levelsToDeposit = 0;
 
@@ -100,14 +117,12 @@ public class Xpb implements CommandExecutor {
                     // Deposit levels into the player's xp bank.
                     commandPlayer.setLevel(commandPlayer.getLevel() - levelsToDeposit);
                     xpBank.modifyXPBankBalance(commandPlayer, XpBankDatabase.BankAction.DEPOSIT, levelsToDeposit);
-                    commandPlayer
-                            .sendMessage(ChatColor.GOLD + "Successfully deposited " + levelsToDeposit + " levels.");
-                    commandPlayer.sendMessage(
-                            ChatColor.GOLD + "XP Bank Balance: " + xpBank.getXPBankBalance(commandPlayer));
+                    commandPlayer.sendMessage(ChatColor.GOLD + "Successfully deposited " + levelsToDeposit + " levels.");
+                    commandPlayer.sendMessage(ChatColor.GOLD + "XP Bank Balance: " + xpBank.getXPBankBalance(commandPlayer));
                     return true;
                 }
                 // Check if the player typed "/xpb withdraw <levels>".
-                else if (args[0].equals("withdraw")) {
+                else if (args[0].equals("withdraw") || args[0].equals("w")) {
                     // Check if the levels the player provided is an integer.
                     int levelsToWithdraw = 0;
 
@@ -134,24 +149,21 @@ public class Xpb implements CommandExecutor {
                     }
 
                     // Withdraw levels from the player's xp bank.
-                    xpBank.modifyXPBankBalance(commandPlayer, XpBankDatabase.BankAction.WITHDRAW,
-                            levelsToWithdraw);
+                    xpBank.modifyXPBankBalance(commandPlayer, XpBankDatabase.BankAction.WITHDRAW, levelsToWithdraw);
                     commandPlayer.setLevel(commandPlayer.getLevel() + levelsToWithdraw);
 
-                    commandPlayer
-                            .sendMessage(ChatColor.GOLD + "Successfully withdrew " + levelsToWithdraw + " levels.");
-                    commandPlayer.sendMessage(
-                            ChatColor.GOLD + "XP Bank Balance: " + xpBank.getXPBankBalance(commandPlayer));
+                    commandPlayer.sendMessage(ChatColor.GOLD + "Successfully withdrew " + levelsToWithdraw + " levels.");
+                    commandPlayer.sendMessage(ChatColor.GOLD + "XP Bank Balance: " + xpBank.getXPBankBalance(commandPlayer));
                     return true;
                 }
             }
 
             // The player gave too many parameters.
             commandPlayer.sendMessage(ChatColor.RED + "Too many parameters! Proper syntax is:");
-            commandPlayer.sendMessage(ChatColor.RED + "/xpb | /xpbank top10");
-            commandPlayer.sendMessage(ChatColor.RED + "/xpb <deposit|withdrawal> <levels>");
+            commandPlayer.sendMessage(ChatColor.RED + "/xpb | /xpb <help | ?>");
+            commandPlayer.sendMessage(ChatColor.RED + "/xpb <balance | b> | /xpb top10");
+            commandPlayer.sendMessage(ChatColor.RED + "/xpb <deposit | d> <levels> | /xpb <withdraw | w> <levels>");
             return true;
-
         }
 
         // The command was not handled.

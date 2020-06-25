@@ -37,7 +37,7 @@ public class XpBankDatabase {
     private Connection conn = null;
 
     /**
-     * Connects to an existing expBank database or, if necessary, creates a database
+     * Connects to an existing xp bank database or, if necessary, creates a new database
      * if one doesn't exist.
      */
     public XpBankDatabase() {
@@ -85,7 +85,7 @@ public class XpBankDatabase {
             // Make sure the query was successful.
             if (pstmt.executeUpdate() > 0) {
                 EverythingPlugin.getEPLogger()
-                        .info("The player " + player.getName() + " has been added to the " + tableName + " database!");
+                        .info("The player " + player.getName() + " has been added to the xp bank database!");
             }
         }
         // An error occurred executing the query to the database.
