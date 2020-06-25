@@ -35,8 +35,8 @@ public class Xpb implements CommandExecutor {
      */
     public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 
-        // Check if the command being run is "/xpbank".
-        if (commandLabel.equals("xpbank")) {
+        // Check if the command being run is "/xpb".
+        if (commandLabel.equals("xpb")) {
             // Check if the entity running the command is a player.
             if (!(sender instanceof Player)) {
                 sender.sendMessage(ChatColor.RED + "You must be a player to use that command!");
@@ -47,31 +47,31 @@ public class Xpb implements CommandExecutor {
             Player commandPlayer = (Player) sender;
             XpBankDatabase xpBank = EverythingPlugin.getXpBankDatabase();
 
-            // Check if the player only typed "/xpbank".
+            // Check if the player only typed "/xpb".
             if (args.length == 0) {
                 // Return the amount of levels stored in the player's xp bank.
                 commandPlayer.sendMessage(
                         ChatColor.GOLD + "XP Bank Balance: " + xpBank.getXPBankBalance(commandPlayer));
                 return true;
             }
-            // Check if the player typed "/xpbank (something)".
+            // Check if the player typed "/xpb (something)".
             else if (args.length == 1) {
-                // Check if the player typed "/xpbank create".
+                // Check if the player typed "/xpb create".
                 if (args[0].equals("create")) {
                     // Create a new record in the xp bank database, if possible.
                     xpBank.createRecord(commandPlayer);
                     return true;
                 }
-                // Check if the player typed "/xpbank top10".
+                // Check if the player typed "/xpb top10".
                 else if (args[0].equals("top10")) {
                     // Show the top 10 highest xpbanks.
                     // TODO
                     return true;
                 }
             }
-            // Check if the player typed "/xpbank (something) (something)".
+            // Check if the player typed "/xpb (something) (something)".
             else if (args.length == 2) {
-                // Check if the player typed "/xpbank deposit <levels>".
+                // Check if the player typed "/xpb deposit <levels>".
                 if (args[0].equals("deposit")) {
                     // Check if the levels the player provided is an integer.
                     int levelsToDeposit = 0;
@@ -106,7 +106,7 @@ public class Xpb implements CommandExecutor {
                             ChatColor.GOLD + "XP Bank Balance: " + xpBank.getXPBankBalance(commandPlayer));
                     return true;
                 }
-                // Check if the player typed "/xpbank withdraw <levels>".
+                // Check if the player typed "/xpb withdraw <levels>".
                 else if (args[0].equals("withdraw")) {
                     // Check if the levels the player provided is an integer.
                     int levelsToWithdraw = 0;
@@ -148,8 +148,8 @@ public class Xpb implements CommandExecutor {
 
             // The player gave too many parameters.
             commandPlayer.sendMessage(ChatColor.RED + "Too many parameters! Proper syntax is:");
-            commandPlayer.sendMessage(ChatColor.RED + "/xpbank | /xpbank top10");
-            commandPlayer.sendMessage(ChatColor.RED + "/xpbank <deposit|withdrawal> <levels>");
+            commandPlayer.sendMessage(ChatColor.RED + "/xpb | /xpbank top10");
+            commandPlayer.sendMessage(ChatColor.RED + "/xpb <deposit|withdrawal> <levels>");
             return true;
 
         }

@@ -17,4 +17,4 @@ commands:
     usage: /exp set <level> [player] | /exp give <level> <player1> [player2] | /exp clear [player]
   xpb:
     description: Stores the player's experience levels in a virtual bank.
-    usage: /xpbank | /xpbank <create|top10> | /xpbank <deposit|withdrawal> <levels>
+    usage: /xpb | /xpb <create|top10> | /xpb <deposit|withdrawal> <levels>

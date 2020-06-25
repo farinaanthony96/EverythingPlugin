@@ -44,7 +44,7 @@ public class XpBankDatabase {
         // Check if a database already exists.
         if (!xpBankDatabaseExists()) {
             // Create and initialize a new database.
-            EverythingPlugin.getEPLogger().info("First startup detected! Creating a new xp bank database...");
+            EverythingPlugin.getEPLogger().info("No xp bank database detected! Creating a new xp bank database...");
             createXPBankDatabase();
         }
         // Connect to the existing database.
