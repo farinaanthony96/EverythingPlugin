@@ -14,12 +14,11 @@ import org.bukkit.entity.Player;
 import com.bluemarien.everythingplugin.EverythingPlugin;
 
 /**
- * This class represents an xp bank database that this plugin uses to store data
- * about players on the server this plugin is installed with. It uses SQLite to
- * handle database functionality.
+ * This class represents an xp bank database that this plugin uses to store data about players on
+ * the server this plugin is installed with. It uses SQLite to handle database functionality.
  *
  * @author Anthony Farina
- * @version 2020.06.25
+ * @version 2020.06.28
  */
 public class XpBankDatabase {
 
@@ -31,20 +30,22 @@ public class XpBankDatabase {
     /**
      * Initialize database paths/name and declare the connection to database.
      */
-    private final String databasePath = EverythingPlugin.getPluginFolderPath() + "/" + EverythingPlugin.getXpBankDatabaseName();
+    private final String databasePath =
+            EverythingPlugin.getPluginFolderPath() + "/" + EverythingPlugin.getXpBankDatabaseName();
     private final String localPathURL = "jdbc:sqlite:" + databasePath;
     private final String tableName = "xpBankTable";
     private Connection conn = null;
 
     /**
-     * Connects to an existing xp bank database or, if necessary, creates a new database
-     * if one doesn't exist.
+     * Connects to an existing xp bank database or, if necessary, creates a new database if one
+     * doesn't exist.
      */
     public XpBankDatabase() {
         // Check if a database already exists.
         if (!xpBankDatabaseExists()) {
             // Create and initialize a new database.
-            EverythingPlugin.getEPLogger().info("No xp bank database detected! Creating a new xp bank database...");
+            EverythingPlugin.getEPLogger().info("No xp bank database detected! Creating a new xp " +
+                    "bank database...");
             createXPBankDatabase();
         }
         // Connect to the existing database.
@@ -57,12 +58,14 @@ public class XpBankDatabase {
             }
             // An error occurred connecting to the database.
             catch (SQLException e) {
-                EverythingPlugin.getEPLogger().info("Error connecting to the xp bank database! Disabling plugin...");
+                EverythingPlugin.getEPLogger().info("Error connecting to the xp bank database! " +
+                        "Disabling plugin...");
                 EverythingPlugin.getEPLogger().info(e.getMessage());
                 // Bukkit.getServer().getPluginManager().disablePlugin(EverythingPlugin);
             }
 
-            EverythingPlugin.getEPLogger().info("Connected to the existing xp bank database successfully!");
+            EverythingPlugin.getEPLogger().info("Connected to the existing xp bank database " +
+                    "successfully!");
         }
     }
 
@@ -85,12 +88,14 @@ public class XpBankDatabase {
             // Make sure the query was successful.
             if (pstmt.executeUpdate() > 0) {
                 EverythingPlugin.getEPLogger()
-                        .info("The player " + player.getName() + " has been added to the xp bank database!");
+                        .info("The player " + player.getName() + " has been added to the xp bank " +
+                                "database!");
             }
         }
         // An error occurred executing the query to the database.
         catch (SQLException e) {
-            EverythingPlugin.getEPLogger().info("An error occurred adding " + player.getName() + " to the xp bank database.");
+            EverythingPlugin.getEPLogger().info("An error occurred adding " + player.getName() +
+                    " to the xp bank database.");
             EverythingPlugin.getEPLogger().info(e.getMessage());
         }
     }
@@ -106,11 +111,14 @@ public class XpBankDatabase {
         // Initialize the UUID of the player, the query for the database, and the level
         // variable.
         String uuid = player.getUniqueId().toString();
-        String query = "SELECT UUID, XP\n" + "FROM " + tableName + "\n" + "WHERE UUID LIKE '" + uuid + "';";
+        String query =
+                "SELECT UUID, XP\n" + "FROM " + tableName + "\n" + "WHERE UUID LIKE '" + uuid +
+                        "';";
         int levelsInBank = 0;
 
         // Try to execute the query and get the player's xp bank balance.
-        try (Statement statement = conn.createStatement(); ResultSet result = statement.executeQuery(query)) {
+        try (Statement statement = conn.createStatement(); ResultSet result =
+                statement.executeQuery(query)) {
             // Get the player's record in the database and get the player's xp bank balance.
             result.next();
             levelsInBank = result.getInt("XP");
@@ -126,8 +134,7 @@ public class XpBankDatabase {
     }
 
     /**
-     * Modify an a player's xp bank balance by either depositing or withdrawing more
-     * levels.
+     * Modify an a player's xp bank balance by either depositing or withdrawing more levels.
      *
      * @param player The player to modify the xp bank balance for.
      * @param action Whether to deposit or withdraw from the xp bank.
@@ -179,7 +186,8 @@ public class XpBankDatabase {
             EverythingPlugin.getEPLogger().info(e.getMessage());
         }
 
-        EverythingPlugin.getEPLogger().info("Closed the connection to the xp bank database successfully!");
+        EverythingPlugin.getEPLogger().info("Closed the connection to the xp bank database " +
+                "successfully!");
     }
 
     /**
@@ -192,8 +200,8 @@ public class XpBankDatabase {
     }
 
     /**
-     * Creates a new xp bank database in the EverythingPlugin directory and creates
-     * a table in the xp bank database.
+     * Creates a new xp bank database in the EverythingPlugin directory and creates a table in the
+     * xp bank database.
      */
     private void createXPBankDatabase() {
         // Initialize a string containing the relative path to the xp bank database.
@@ -205,7 +213,8 @@ public class XpBankDatabase {
             conn = DriverManager.getConnection(localPath);
 
             // Initialize the query for creating a new table.
-            String statement = "CREATE TABLE IF NOT EXISTS " + tableName + " (\n" + "	UUID text UNIQUE,\n"
+            String statement = "CREATE TABLE IF NOT EXISTS " + tableName + " (\n" + "	UUID text " +
+                    "UNIQUE,\n"
                     + "	XP integer CHECK(XP >= 0)\n" + ");";
 
             // Try to execute the query to the database.
@@ -215,19 +224,22 @@ public class XpBankDatabase {
             }
             // An error occurred executing the query to the database.
             catch (SQLException e) {
-                EverythingPlugin.getEPLogger().info("An error occurred creating the table for the xp bank database! Disabling plugin...");
+                EverythingPlugin.getEPLogger().info("An error occurred creating the table for the" +
+                        " xp bank database! Disabling plugin...");
                 EverythingPlugin.getEPLogger().info(e.getMessage());
                 // Bukkit.getServer().getPluginManager().disablePlugin(EverythingPlugin);
             }
 
             // Check if the creation and connection to the new database was successful.
             if (conn != null) {
-                EverythingPlugin.getEPLogger().info("Created and connected to the new xp bank database successfully!");
+                EverythingPlugin.getEPLogger().info("Created and connected to the new xp bank " +
+                        "database successfully!");
             }
         }
         // An error occurred creating the database.
         catch (SQLException e) {
-            EverythingPlugin.getEPLogger().info("An error occurred creating the new xp bank database! Disabling plugin...");
+            EverythingPlugin.getEPLogger().info("An error occurred creating the new xp bank " +
+                    "database! Disabling plugin...");
             EverythingPlugin.getEPLogger().info(e.getMessage());
             // Bukkit.getServer().getPluginManager().disablePlugin(EverythingPlugin);
         }

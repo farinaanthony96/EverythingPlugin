@@ -18,11 +18,11 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * This class represents the EverythingPlugin plugin running on a Spigot server.
- * The plugin's description file is named "plugin.yml".
+ * This class represents the EverythingPlugin plugin running on a Spigot server. The plugin's
+ * description file is named "plugin.yml".
  *
  * @author Anthony Farina
- * @version 2020.06.25
+ * @version 2020.06.28
  */
 public final class EverythingPlugin extends JavaPlugin {
 
@@ -79,7 +79,8 @@ public final class EverythingPlugin extends JavaPlugin {
             }
             // Something went wrong creating the EverythingPlugin directory.
             catch (IOException e) {
-                logger.info("An error occurred while creating the EverythingPlugin directory! Disabling plugin...");
+                logger.info("An error occurred while creating the EverythingPlugin directory! " +
+                        "Disabling plugin...");
                 logger.info(e.getMessage());
                 getServer().getPluginManager().disablePlugin(this);
                 return;
@@ -90,7 +91,8 @@ public final class EverythingPlugin extends JavaPlugin {
         xpBankDB = new XpBankDatabase();
 
         // We enabled the plugin successfully.
-        logger.info(pdFile.getName() + " v" + pdFile.getVersion() + " has been successfully enabled!");
+        logger.info(pdFile.getName() + " v" + pdFile.getVersion() + " has been successfully " +
+                "enabled!");
     }
 
     /**
@@ -104,7 +106,8 @@ public final class EverythingPlugin extends JavaPlugin {
         }
 
         // We disabled the plugin successfully.
-        logger.info(pdFile.getName() + " v" + pdFile.getVersion() + " has been successfully disabled!");
+        logger.info(pdFile.getName() + " v" + pdFile.getVersion() + " has been successfully " +
+                "disabled!");
     }
 
     /**
@@ -153,8 +156,8 @@ public final class EverythingPlugin extends JavaPlugin {
     }
 
     /**
-     * Register the plugin's commands with Spigot. Don't forget to add them to the
-     * plugin.yml file after adding them here!
+     * Register the plugin's commands with Spigot. Don't forget to add them to the plugin.yml file
+     * after adding them here!
      */
     private void loadCommands() {
         // Set the executor for each command in the plugin description file.
@@ -162,8 +165,8 @@ public final class EverythingPlugin extends JavaPlugin {
 
         getCommand("heal").setExecutor(new Heal());
         getCommand("feed").setExecutor(new Feed());
-        getCommand("exp").setExecutor(new Xpshare());
-        getCommand("xpb").setExecutor(new Xpbank());
+        getCommand("xpshare").setExecutor(new Xpshare());
+        getCommand("xpbank").setExecutor(new Xpbank());
 
         logger.info("Commands loaded successfully!");
     }
@@ -174,7 +177,8 @@ public final class EverythingPlugin extends JavaPlugin {
      * @return True if there is a valid permissions manager, false otherwise.
      */
     private boolean setupPermissions() {
-        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+        RegisteredServiceProvider<Permission> rsp =
+                getServer().getServicesManager().getRegistration(Permission.class);
         perms = rsp.getProvider();
         return perms != null;
     }

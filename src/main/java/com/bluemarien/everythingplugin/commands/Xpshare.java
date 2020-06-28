@@ -16,7 +16,7 @@ import net.milkbowl.vault.permission.Permission;
  * players on the server.
  *
  * @author Anthony Farina
- * @version 2020.06.27
+ * @version 2020.06.28
  */
 public class Xpshare implements CommandExecutor {
 
@@ -82,7 +82,7 @@ public class Xpshare implements CommandExecutor {
         }
         // Check if the player typed "/xpshare (something) (something)".
         else if (args.length == 2) {
-            int level = 0;
+            int level;
 
             // Try to get a numbered experience level from the first command parameter.
             try {
@@ -90,15 +90,13 @@ public class Xpshare implements CommandExecutor {
             }
             // The experience level given was not a number.
             catch (NumberFormatException e) {
-                commandPlayer.sendMessage(ChatColor.RED + "Experience level must be a " +
-                        "non-negative integer!");
+                commandPlayer.sendMessage(ChatColor.RED + "You must provide a positive integer level!");
                 return true;
             }
 
-            // Check if the experience level given is negative.
-            if (level < 0) {
-                commandPlayer.sendMessage(ChatColor.RED + "Experience level must be a " +
-                        "non-negative integer!");
+            // Check if the player provided a positive integer level.
+            if (level < 1) {
+                commandPlayer.sendMessage(ChatColor.RED + "You must provide a positive integer level!");
                 return true;
             }
 
@@ -115,7 +113,7 @@ public class Xpshare implements CommandExecutor {
             // Check if the player has enough experience levels to give to the receiving player.
             if (commandPlayer.getLevel() < level) {
                 commandPlayer.sendMessage(ChatColor.RED + "You do not have enough experience " +
-                        "levels to give  to " + receiver.getName() + "!");
+                        "levels to give to " + receiver.getName() + "!");
                 return true;
             }
 
@@ -129,14 +127,11 @@ public class Xpshare implements CommandExecutor {
             return true;
         }
         // The player typed more than 2 arguments to the command.
-        else if (args.length >= 3) {
+        else {
             // The player gave too many arguments.
             commandPlayer.sendMessage(ChatColor.RED + "Too many arguments! Proper syntax is:");
             commandPlayer.sendMessage(ChatColor.RED + "/xpshare <level> <player>");
             return true;
         }
-
-        // The command was not handled properly.
-        return false;
     }
 }
