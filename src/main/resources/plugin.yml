@@ -13,8 +13,8 @@ commands:
     description: Feeds the player to full hunger.
     usage: /feed [player]
   exp:
-    description: Gives the player experience levels.
+    description: Give other players experience levels.
     usage: /exp set <level> [player] | /exp give <level> <player1> [player2] | /exp clear [player]
   xpb:
-    description: Stores the player's experience levels in a virtual bank.
+    description: Stores the player's experience levels.
     usage: /xpb | /xpb <create|top10> | /xpb <deposit|withdrawal> <levels>

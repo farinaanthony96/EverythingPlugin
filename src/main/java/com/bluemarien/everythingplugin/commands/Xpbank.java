@@ -20,7 +20,7 @@ import net.milkbowl.vault.permission.Permission;
  * @author Anthony Farina
  * @version 2020.06.25
  */
-public class Xpb implements CommandExecutor {
+public class Xpbank implements CommandExecutor {
 
     /**
      * This method is run when a player runs the xpbank command.
@@ -87,9 +87,11 @@ public class Xpb implements CommandExecutor {
 
                 // The player typed an invalid subcommand.
                 commandPlayer.sendMessage(ChatColor.RED + "Unknown subcommand! Proper syntax is:");
-                commandPlayer.sendMessage(ChatColor.RED + "/xpb | /xpb <help | ?>");
-                commandPlayer.sendMessage(ChatColor.RED + "/xpb <balance | b> | /xpb top10");
-                commandPlayer.sendMessage(ChatColor.RED + "/xpb <deposit | d> <levels> | /xpb <withdraw | w> <levels>");
+                commandPlayer.sendMessage(ChatColor.RED + "/xpb [help | ?]");
+                commandPlayer.sendMessage(ChatColor.RED + "/xpb top10");
+                commandPlayer.sendMessage(ChatColor.RED + "/xpb <balance | b>");
+                commandPlayer.sendMessage(ChatColor.RED + "/xpb <deposit | d> <levels>");
+                commandPlayer.sendMessage(ChatColor.RED + "/xpb <withdraw | w> <levels>");
                 return true;
             }
             // Check if the player typed "/xpb (something) (something)".

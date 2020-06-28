@@ -1,9 +1,9 @@
 package com.bluemarien.everythingplugin;
 
-import com.bluemarien.everythingplugin.commands.Exp;
+import com.bluemarien.everythingplugin.commands.Xpshare;
 import com.bluemarien.everythingplugin.commands.Feed;
 import com.bluemarien.everythingplugin.commands.Heal;
-import com.bluemarien.everythingplugin.commands.Xpb;
+import com.bluemarien.everythingplugin.commands.Xpbank;
 import com.bluemarien.everythingplugin.backend.XpBankDatabase;
 
 import net.milkbowl.vault.permission.Permission;
@@ -162,8 +162,8 @@ public final class EverythingPlugin extends JavaPlugin {
 
         getCommand("heal").setExecutor(new Heal());
         getCommand("feed").setExecutor(new Feed());
-        getCommand("exp").setExecutor(new Exp());
-        getCommand("xpb").setExecutor(new Xpb());
+        getCommand("exp").setExecutor(new Xpshare());
+        getCommand("xpb").setExecutor(new Xpbank());
 
         logger.info("Commands loaded successfully!");
     }
