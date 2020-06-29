@@ -31,7 +31,7 @@ public class XpBankDatabase {
      * Initialize database paths/name and declare the connection to database.
      */
     private final String databasePath =
-            EverythingPlugin.getPluginFolderPath() + "/" + EverythingPlugin.getXpBankDatabaseName();
+            EverythingPlugin.getPluginFolderPath() + "/" + EverythingPlugin.getXpBankDBName();
     private final String localPathURL = "jdbc:sqlite:" + databasePath;
     private final String tableName = "xpBankTable";
     private Connection conn = null;

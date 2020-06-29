@@ -1,5 +1,6 @@
 package com.bluemarien.everythingplugin;
 
+import com.bluemarien.everythingplugin.backend.WarpDatabase;
 import com.bluemarien.everythingplugin.commands.Xpshare;
 import com.bluemarien.everythingplugin.commands.Feed;
 import com.bluemarien.everythingplugin.commands.Heal;
@@ -22,22 +23,28 @@ import org.bukkit.plugin.java.JavaPlugin;
  * description file is named "plugin.yml".
  *
  * @author Anthony Farina
- * @version 2020.06.28
+ * @version 2020.06.29
  */
 public final class EverythingPlugin extends JavaPlugin {
 
     /**
-     * Declare plugin's logger and description file "plugin.yml".
+     * Declare plugin's logger, description file "plugin.yml", and folder path.
      */
-    private static Logger logger;
-    private PluginDescriptionFile pdFile;
+    private static Logger logger = null;
+    private PluginDescriptionFile pdFile = null;
+    private static final String pluginFolderPath = "./plugins/EverythingPlugin";
 
     /**
      * Declare xp bank fields.
      */
-    private static XpBankDatabase xpBankDB;
-    private static final String pluginFolderPath = "./plugins/EverythingPlugin";
+    private static XpBankDatabase xpBankDB = null;
     private static final String xpBankDBName = "XPBankDatabase.db";
+
+    /**
+     * Declare warp fields.
+     */
+    private static WarpDatabase warpDB = null;
+    private static final String warpDBName = "warps.yml";
 
     /**
      * Declare a reference to the permissions manager for the plugin.
@@ -89,6 +96,9 @@ public final class EverythingPlugin extends JavaPlugin {
 
         // Connect to or create a new XP bank database.
         xpBankDB = new XpBankDatabase();
+
+        // Connect to or create a new warp database.
+
 
         // We enabled the plugin successfully.
         logger.info(pdFile.getName() + " v" + pdFile.getVersion() + " has been successfully " +
@@ -151,9 +161,16 @@ public final class EverythingPlugin extends JavaPlugin {
      *
      * @return The name of the xp bank database.
      */
-    public static String getXpBankDatabaseName() {
+    public static String getXpBankDBName() {
         return xpBankDBName;
     }
+
+    /**
+     * Returns the name of the warp database.
+     *
+     * @return The name of the warp database.
+     */
+    public static String getWarpDBName() { return warpDBName; }
 
     /**
      * Register the plugin's commands with Spigot. Don't forget to add them to the plugin.yml file
@@ -181,5 +198,15 @@ public final class EverythingPlugin extends JavaPlugin {
                 getServer().getServicesManager().getRegistration(Permission.class);
         perms = rsp.getProvider();
         return perms != null;
+    }
+
+    /**
+     * Loads the
+     */
+    private void loadConfiguration() {
+        //See "Creating you're defaults"
+        getConfig().options().copyDefaults(true); // NOTE: You do not have to use "plugin." if the class extends the java plugin
+        //Save the config whenever you manipulate it
+        saveConfig();
     }
 }

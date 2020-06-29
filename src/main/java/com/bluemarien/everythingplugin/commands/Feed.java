@@ -43,7 +43,7 @@ public class Feed implements CommandExecutor {
         // Check if the entity running the command is a player.
         if (!(sender instanceof Player)) {
             // The entity running the command is not a player.
-            sender.sendMessage("You must be a player to use that command!");
+            sender.sendMessage(ChatColor.RED + "You must be a player to use that command!");
             return true;
         }
 
