@@ -1,10 +1,7 @@
 package com.bluemarien.everythingplugin;
 
 import com.bluemarien.everythingplugin.backend.WarpDatabase;
-import com.bluemarien.everythingplugin.commands.Xpshare;
-import com.bluemarien.everythingplugin.commands.Feed;
-import com.bluemarien.everythingplugin.commands.Heal;
-import com.bluemarien.everythingplugin.commands.Xpbank;
+import com.bluemarien.everythingplugin.commands.*;
 import com.bluemarien.everythingplugin.backend.XpBankDatabase;
 
 import net.milkbowl.vault.permission.Permission;
@@ -98,7 +95,7 @@ public final class EverythingPlugin extends JavaPlugin {
         xpBankDB = new XpBankDatabase();
 
         // Connect to or create a new warp database.
-
+        warpDB = new WarpDatabase();
 
         // We enabled the plugin successfully.
         logger.info(pdFile.getName() + " v" + pdFile.getVersion() + " has been successfully " +
@@ -184,6 +181,7 @@ public final class EverythingPlugin extends JavaPlugin {
         getCommand("feed").setExecutor(new Feed());
         getCommand("xpshare").setExecutor(new Xpshare());
         getCommand("xpbank").setExecutor(new Xpbank());
+        getCommand("warp").setExecutor(new Warp());
 
         logger.info("Commands loaded successfully!");
     }
