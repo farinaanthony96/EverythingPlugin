@@ -2,7 +2,11 @@ package com.bluemarien.everythingplugin.commands;
 
 import com.bluemarien.everythingplugin.EverythingPlugin;
 import com.bluemarien.everythingplugin.backend.WarpDatabase;
+
+import java.util.Set;
+
 import net.milkbowl.vault.permission.Permission;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -54,11 +58,19 @@ public class Warp implements CommandExecutor {
         Permission perms = EverythingPlugin.getPermissions();
         warpDB = new WarpDatabase();
 
+        // Check if the player has permission to run this command.
+        if (!perms.has(commandPlayer, "everythingplugin.warp")) {
+            commandPlayer.sendMessage(ChatColor.RED + "You do not have permission to run that " +
+                    "command.");
+            return true;
+        }
+
         // Check if the player typed "/warp".
         if (args.length == 0) {
             // Show the player the usage of "/warp".
             commandPlayer.sendMessage(ChatColor.GOLD + "Usage of \"/warp\":");
             commandPlayer.sendMessage(ChatColor.GOLD + "/warp [help | ?]");
+            commandPlayer.sendMessage(ChatColor.GOLD + "/warp <list | l>");
             commandPlayer.sendMessage(ChatColor.GOLD + "/warp <warp name>");
             commandPlayer.sendMessage(ChatColor.GOLD + "/warp <create | c> <warp name>");
             commandPlayer.sendMessage(ChatColor.GOLD + "/warp <delete | d> <warp name>");
@@ -71,66 +83,71 @@ public class Warp implements CommandExecutor {
                 // Show the player the usage of "/warp".
                 commandPlayer.sendMessage(ChatColor.GOLD + "Usage of \"/warp\":");
                 commandPlayer.sendMessage(ChatColor.GOLD + "/warp [help | ?]");
+                commandPlayer.sendMessage(ChatColor.GOLD + "/warp <list | l>");
                 commandPlayer.sendMessage(ChatColor.GOLD + "/warp <warp name>");
                 commandPlayer.sendMessage(ChatColor.GOLD + "/warp <create | c> <warp name>");
                 commandPlayer.sendMessage(ChatColor.GOLD + "/warp <delete | d> <warp name>");
                 return true;
-            } else {
+            }
+            // Check if the player typed "/warp list" or "/warp l".
+            else if (args[0].equals("list") || args[0].equals("l")) {
+                // Get the list of all warp names in the database and prepare the warp list message.
+                Set<String> warpNames = warpDB.getWarpDatabase().getConfigurationSection("warps").getKeys(false);
+                StringBuilder warpMessage = new StringBuilder(ChatColor.GOLD + "Warps: ");
+
+                // Put all the warp names in the warp list message.
+                for (String warp : warpNames) {
+                    warpMessage.append(warp);
+                    warpMessage.append(" ");
+                }
+
+                // Send the player the warp list.
+                commandPlayer.sendMessage(ChatColor.GOLD + warpMessage.toString());
+                return true;
+            }
+            // The player intends to teleport to a warp.
+            else {
+                // Get the location of the warp.
+                Location warp = warpDB.getWarp(args[0]);
+
                 // Check if the warp exists in the database.
-                if (warpDB.getWarpDatabase().get("warps." + args[0]) == null) {
+                if (warp == null) {
                     commandPlayer.sendMessage(ChatColor.RED + "The warp " + args[0] + " does not " +
                             "exist!");
                     return true;
                 }
 
                 // Teleport the player to the warp location.
-                commandPlayer.teleport(new Location(
-                        Bukkit.getWorld(
-                        warpDB.getWarpDatabase().getString("warps." + args[0] + ".world")),
-                        warpDB.getWarpDatabase().getDouble("warps." + args[0] + ".x"),
-                        warpDB.getWarpDatabase().getDouble("warps." + args[0] + ".y"),
-                        warpDB.getWarpDatabase().getDouble("warps." + args[0] + ".z"),
-                        Float.parseFloat(warpDB.getWarpDatabase().getString("warps." + args[0] + ".yaw")),
-                        Float.parseFloat(warpDB.getWarpDatabase().getString("warps." + args[0] + ".pitch"))));
+                commandPlayer.teleport(warp);
                 commandPlayer.sendMessage(ChatColor.GOLD + "Warped to " + args[0] + ".");
-                return false;
+                return true;
             }
         }
         // Check if the player typed "/warp (something) (something)".
         else if (args.length == 2) {
             // Check if the player typed "/warp create <warp name>" or "/warp c <warp name>".
             if (args[0].equals("create") || args[0].equals("c")) {
-                // Create the new warp in the warp database.
-                warpDB.getWarpDatabase().set("warps." + args[1] + ".world",
-                        commandPlayer.getLocation().getWorld().getName());
-                warpDB.getWarpDatabase().set("warps." + args[1] + ".x",
-                        commandPlayer.getLocation().getX());
-                warpDB.getWarpDatabase().set("warps." + args[1] + ".y",
-                        commandPlayer.getLocation().getY());
-                warpDB.getWarpDatabase().set("warps." + args[1] + ".z",
-                        commandPlayer.getLocation().getZ());
-                warpDB.getWarpDatabase().set("warps." + args[1] + ".yaw",
-                        commandPlayer.getLocation().getYaw());
-                warpDB.getWarpDatabase().set("warps." + args[1] + ".pitch",
-                        commandPlayer.getLocation().getPitch());
-                warpDB.saveWarpDatabase();
+                // Check if the player is naming a warp after a command.
+                if (args[1].equals("create") || args[1].equals("c") || args[1].equals("delete") || args[1].equals("d") || args[1].equals("list") || args[1].equals("l") || args[1].equals("help") || args[1].equals("?")) {
+                    commandPlayer.sendMessage(ChatColor.RED + "You cannot name a warp after a warp command!");
+                    return true;
+                }
 
+                // Insert the new warp in the warp database.
+                warpDB.insertWarp(commandPlayer.getLocation(), args[1]);
                 commandPlayer.sendMessage(ChatColor.GOLD + "Warp " + args[1] + " created.");
                 return true;
             }
             // Check if the player typed "/warp delete <warp name>" or "/warp d <warp name>".
             else if (args[0].equals("delete") || args[0].equals("d")) {
                 // Check if the warp exists in the database.
-                if (warpDB.getWarpDatabase().getConfigurationSection("warps." + args[1]) == null) {
+                if (!warpDB.removeWarp(args[1])) {
                     commandPlayer.sendMessage(ChatColor.RED + "The warp " + args[1] + " does not " +
                             "exist!");
                     return true;
                 }
 
-                // Delete the warp from the warp database.
-                warpDB.getWarpDatabase().set("warps." + args[1], null);
-                warpDB.saveWarpDatabase();
-
+                // The warp was successfully removed from the database.
                 commandPlayer.sendMessage(ChatColor.GOLD + "Warp " + args[1] + " deleted.");
                 return true;
             }
@@ -138,6 +155,7 @@ public class Warp implements CommandExecutor {
             // The player typed an invalid subcommand.
             commandPlayer.sendMessage(ChatColor.RED + "Unknown subcommand! Proper syntax is:");
             commandPlayer.sendMessage(ChatColor.RED + "/warp [help | ?]");
+            commandPlayer.sendMessage(ChatColor.RED + "/warp <list | l>");
             commandPlayer.sendMessage(ChatColor.RED + "/warp <warp name>");
             commandPlayer.sendMessage(ChatColor.RED + "/warp <create | c> <warp name>");
             commandPlayer.sendMessage(ChatColor.RED + "/warp <delete | d> <warp name>");
@@ -148,6 +166,7 @@ public class Warp implements CommandExecutor {
             // The player gave too many parameters.
             commandPlayer.sendMessage(ChatColor.RED + "Too many parameters! Proper syntax is:");
             commandPlayer.sendMessage(ChatColor.RED + "/warp [help | ?]");
+            commandPlayer.sendMessage(ChatColor.RED + "/warp <list | l>");
             commandPlayer.sendMessage(ChatColor.RED + "/warp <warp name>");
             commandPlayer.sendMessage(ChatColor.RED + "/warp <create | c> <warp name>");
             commandPlayer.sendMessage(ChatColor.RED + "/warp <delete | d> <warp name>");

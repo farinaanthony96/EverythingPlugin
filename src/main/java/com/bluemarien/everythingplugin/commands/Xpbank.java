@@ -77,7 +77,7 @@ public class Xpbank implements CommandExecutor {
             // Check if the player typed "/xpbank create".
             if (args[0].equals("create")) {
                 // Create a new record in the xp bank database, if possible.
-                xpBank.createRecord(commandPlayer);
+                xpBank.insertPlayer(commandPlayer);
                 return true;
             }
             // Check if the player typed "/xpbank balance" or "/xpbank b".

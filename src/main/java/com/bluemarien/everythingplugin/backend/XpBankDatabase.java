@@ -18,7 +18,7 @@ import com.bluemarien.everythingplugin.EverythingPlugin;
  * the server this plugin is installed with. It uses SQLite to handle database functionality.
  *
  * @author Anthony Farina
- * @version 2020.06.28
+ * @version 2020.06.30
  */
 public class XpBankDatabase {
 
@@ -70,11 +70,11 @@ public class XpBankDatabase {
     }
 
     /**
-     * Insert a record into the database.
+     * Insert the given player into the database.
      *
      * @param player The player to insert into the database.
      */
-    public void createRecord(Player player) {
+    public void insertPlayer(Player player) {
         // Initialize the UUID of the player and the query for the database.
         String uuid = player.getUniqueId().toString();
         String query = "INSERT INTO " + tableName + "(UUID,XP) VALUES(?,?)";
