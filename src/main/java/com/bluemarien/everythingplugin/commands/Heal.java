@@ -1,5 +1,9 @@
 package com.bluemarien.everythingplugin.commands;
 
+import com.bluemarien.everythingplugin.EverythingPlugin;
+
+import net.milkbowl.vault.permission.Permission;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.attribute.Attribute;
@@ -9,15 +13,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 
-import com.bluemarien.everythingplugin.EverythingPlugin;
-
-import net.milkbowl.vault.permission.Permission;
 
 /**
  * This class represents the heal command. This command is used to heal a player to full health.
  *
  * @author Anthony Farina
- * @version 2020.06.28
+ * @version 2020.07.12
  */
 public class Heal implements CommandExecutor {
 

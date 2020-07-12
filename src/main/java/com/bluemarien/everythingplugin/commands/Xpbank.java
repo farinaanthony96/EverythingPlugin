@@ -1,15 +1,16 @@
 package com.bluemarien.everythingplugin.commands;
 
+import com.bluemarien.everythingplugin.EverythingPlugin;
+import com.bluemarien.everythingplugin.backend.XpBankDatabase;
+
+import net.milkbowl.vault.permission.Permission;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.bluemarien.everythingplugin.EverythingPlugin;
-import com.bluemarien.everythingplugin.backend.XpBankDatabase;
-
-import net.milkbowl.vault.permission.Permission;
 
 /**
  * This class represents the xpbank command. This command is used as a virtual bank for a player's
@@ -17,7 +18,7 @@ import net.milkbowl.vault.permission.Permission;
  * experience banks, deposit, and withdraw experience levels.
  *
  * @author Anthony Farina
- * @version 2020.06.28
+ * @version 2020.07.12
  */
 public class Xpbank implements CommandExecutor {
 

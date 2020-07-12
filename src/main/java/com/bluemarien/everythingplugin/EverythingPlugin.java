@@ -1,26 +1,26 @@
 package com.bluemarien.everythingplugin;
 
-import com.bluemarien.everythingplugin.backend.WarpDatabase;
+import com.bluemarien.everythingplugin.backend.*;
 import com.bluemarien.everythingplugin.commands.*;
-import com.bluemarien.everythingplugin.backend.XpBankDatabase;
-
-import net.milkbowl.vault.permission.Permission;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.logging.Logger;
 
+import net.milkbowl.vault.permission.Permission;
+
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+
 
 /**
  * This class represents the EverythingPlugin plugin running on a Spigot server. The plugin's
  * description file is named "plugin.yml".
  *
  * @author Anthony Farina
- * @version 2020.06.29
+ * @version 2020.07.12
  */
 public final class EverythingPlugin extends JavaPlugin {
 
@@ -32,13 +32,13 @@ public final class EverythingPlugin extends JavaPlugin {
     private static final String pluginFolderPath = "./plugins/EverythingPlugin";
 
     /**
-     * Declare xp bank fields.
+     * Declare xp bank database fields.
      */
     private static XpBankDatabase xpBankDB = null;
     private static final String xpBankDBName = "XPBankDatabase.db";
 
     /**
-     * Declare warp fields.
+     * Declare warp database fields.
      */
     private static WarpDatabase warpDB = null;
     private static final String warpDBName = "warps.yml";
@@ -54,48 +54,32 @@ public final class EverythingPlugin extends JavaPlugin {
      */
     @Override
     public void onEnable() {
-        // Load plugin description file (plugin.yml) and initialize the logger.
+        // Get the plugin's description file (plugin.yml) and logger.
         pdFile = getDescription();
         logger = getLogger();
 
+        // Check if an error occurred setting up the EverythingPlugin directory.
+        if (!setupPluginDirectory()) {
+            logger.info("An error occurred while creating the EverythingPlugin directory! Disabling plugin...");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+
         // Load the plugin's commands.
         loadCommands();
-
-        // Check if Vault is installed on the server.
-        if (getServer().getPluginManager().getPlugin("Vault") == null) {
-            logger.info("Vault not found! Disabling plugin...");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
-
-        // Check if there is a valid permissions plugin installed.
-        if (!setupPermissions()) {
-            logger.info("Could not get a valid permissions plugin from Vault! Disabling plugin...");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
-
-        // Check if the EverythingPlugin directory exists in the "plugins" directory.
-        if (!Files.isDirectory(Paths.get(pluginFolderPath))) {
-            // Try to make the EverythingPlugin directory in the "plugins" directory.
-            try {
-                Files.createDirectory(Paths.get(pluginFolderPath));
-            }
-            // Something went wrong creating the EverythingPlugin directory.
-            catch (IOException e) {
-                logger.info("An error occurred while creating the EverythingPlugin directory! " +
-                        "Disabling plugin...");
-                logger.info(e.getMessage());
-                getServer().getPluginManager().disablePlugin(this);
-                return;
-            }
-        }
 
         // Connect to or create a new XP bank database.
         xpBankDB = new XpBankDatabase();
 
         // Connect to or create a new warp database.
         warpDB = new WarpDatabase();
+
+        // Check if an error occurred setting up the plugin's permission system.
+        if (!setupPermissions()) {
+            logger.info("An error occurred while setting up the permission system! Disabling plugin...");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
 
         // We enabled the plugin successfully.
         logger.info(pdFile.getName() + " v" + pdFile.getVersion() + " has been successfully " +
@@ -112,62 +96,41 @@ public final class EverythingPlugin extends JavaPlugin {
             xpBankDB.closeXPBankDatabase();
         }
 
-        // We disabled the plugin successfully.
+        // Save the warp database.
+        if (warpDB != null) {
+            warpDB.saveWarpDatabase();
+        }
+
+        // Disabled the plugin successfully.
         logger.info(pdFile.getName() + " v" + pdFile.getVersion() + " has been successfully " +
                 "disabled!");
     }
 
     /**
-     * Returns the permission API object to check players for permissions.
+     * Sets up the EverythingPlugin directory.
      *
-     * @return The permission object associated with permissions for the plugin.
+     * @return True if the EverythingPlugin directory was set up successfully, false otherwise.
      */
-    public static Permission getPermissions() {
-        return perms;
-    }
+    private boolean setupPluginDirectory() {
+        // Check if the EverythingPlugin directory exists in the "plugins" directory.
+        if (!Files.isDirectory(Paths.get(pluginFolderPath))) {
+            // Try to make the EverythingPlugin directory in the "plugins" directory.
+            try {
+                Files.createDirectory(Paths.get(pluginFolderPath));
+            }
+            // Something went wrong creating the EverythingPlugin directory.
+            catch (IOException e) {
+                logger.info(e.getMessage());
+                return false;
+            }
 
-    /**
-     * Returns the xp bank database object.
-     *
-     * @return The xp bank database object.
-     */
-    public static XpBankDatabase getXpBankDatabase() {
-        return xpBankDB;
-    }
+            // The EverythingPlugin directory was created successfully.
+            return true;
+        }
 
-    /**
-     * Returns this plugin's logger for output to the server console.
-     *
-     * @return This plugin's logger object.
-     */
-    public static Logger getEPLogger() {
-        return logger;
+        // The EverythingPlugin directory already exists.
+        return true;
     }
-
-    /**
-     * Returns the plugin's folder path in the "plugins" directory.
-     *
-     * @return The plugin's folder path in the "plugins" directory.
-     */
-    public static String getPluginFolderPath() {
-        return pluginFolderPath;
-    }
-
-    /**
-     * Returns the name of the xp bank database.
-     *
-     * @return The name of the xp bank database.
-     */
-    public static String getXpBankDBName() {
-        return xpBankDBName;
-    }
-
-    /**
-     * Returns the name of the warp database.
-     *
-     * @return The name of the warp database.
-     */
-    public static String getWarpDBName() { return warpDBName; }
 
     /**
      * Register the plugin's commands with Spigot. Don't forget to add them to the plugin.yml file
@@ -187,24 +150,85 @@ public final class EverythingPlugin extends JavaPlugin {
     }
 
     /**
-     * Sets up the permissions manager from Vault.
+     * Sets up the permissions system via Vault.
      *
-     * @return True if there is a valid permissions manager, false otherwise.
+     * @return True if permissions were set up successfully, false otherwise.
      */
     private boolean setupPermissions() {
-        RegisteredServiceProvider<Permission> rsp =
-                getServer().getServicesManager().getRegistration(Permission.class);
+        // Get the service provider registration for permissions.
+        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+
+        // Check if the permissions registration was successful.
+        if (rsp == null) {
+            // An error occurred registering the permissions registration.
+            return false;
+        }
+
+        // Get the permissions provider.
         perms = rsp.getProvider();
-        return perms != null;
+
+        // Check if the permissions provider exists.
+        if (perms == null) {
+            // The permissions provider doesn't exist.
+            return false;
+        }
+
+        // Check if Vault is installed on the server.
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+            // Vault is not installed on the server.
+            return false;
+        }
+
+        // Permissions were set up successfully.
+        return true;
     }
 
     /**
-     * Loads the
+     * Returns this plugin's logger object for output to the server console.
+     *
+     * @return This plugin's logger object.
      */
-    private void loadConfiguration() {
-        //See "Creating you're defaults"
-        getConfig().options().copyDefaults(true); // NOTE: You do not have to use "plugin." if the class extends the java plugin
-        //Save the config whenever you manipulate it
-        saveConfig();
-    }
+    public static Logger getEPLogger() { return logger; }
+
+    /**
+     * Returns the plugin's folder path in the "plugins" directory.
+     *
+     * @return The plugin's folder path in the "plugins" directory.
+     */
+    public static String getPluginFolderPath() { return pluginFolderPath; }
+
+    /**
+     * Returns the xp bank database object.
+     *
+     * @return The xp bank database object.
+     */
+    public static XpBankDatabase getXpBankDatabase() { return xpBankDB; }
+
+    /**
+     * Returns the name of the xp bank database.
+     *
+     * @return The name of the xp bank database.
+     */
+    public static String getXpBankDBName() { return xpBankDBName; }
+
+    /**
+     * Returns the warp database object.
+     *
+     * @return The warp database object.
+     */
+    public static WarpDatabase getWarpDatabase() { return warpDB; }
+
+    /**
+     * Returns the name of the warp database.
+     *
+     * @return The name of the warp database.
+     */
+    public static String getWarpDBName() { return warpDBName; }
+
+    /**
+     * Returns the permission object to check for player permissions.
+     *
+     * @return The permission object.
+     */
+    public static Permission getPermissions() { return perms; }
 }

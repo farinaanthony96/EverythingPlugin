@@ -7,7 +7,6 @@ import java.util.Set;
 
 import net.milkbowl.vault.permission.Permission;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -16,14 +15,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
- * This class
+ * This class represents the warp command. This command is used to create, delete, list, and teleport to existing warps set on the server.
  *
  * @author Anthony Farina
- * @version 2020.06.29
+ * @version 2020.07.12
  */
 public class Warp implements CommandExecutor {
-
-    private WarpDatabase warpDB = null;
 
     /**
      * This method is run when a player runs the feed command.
@@ -36,7 +33,6 @@ public class Warp implements CommandExecutor {
      *
      * @return Returns true if the command was handled successfully, false otherwise.
      */
-    @Override
     public boolean onCommand(CommandSender sender, Command command, String commandLabel,
                              String[] args) {
 
@@ -56,7 +52,7 @@ public class Warp implements CommandExecutor {
         // The entity running the command is a player.
         Player commandPlayer = (Player) sender;
         Permission perms = EverythingPlugin.getPermissions();
-        warpDB = new WarpDatabase();
+        WarpDatabase warpDB = EverythingPlugin.getWarpDatabase();
 
         // Check if the player has permission to run this command.
         if (!perms.has(commandPlayer, "everythingplugin.warp")) {
@@ -92,7 +88,7 @@ public class Warp implements CommandExecutor {
             // Check if the player typed "/warp list" or "/warp l".
             else if (args[0].equals("list") || args[0].equals("l")) {
                 // Get the list of all warp names in the database and prepare the warp list message.
-                Set<String> warpNames = warpDB.getWarpDatabase().getConfigurationSection("warps").getKeys(false);
+                Set<String> warpNames = warpDB.listWarps("warps");
                 StringBuilder warpMessage = new StringBuilder(ChatColor.GOLD + "Warps: ");
 
                 // Put all the warp names in the warp list message.

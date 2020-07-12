@@ -1,5 +1,9 @@
 package com.bluemarien.everythingplugin.commands;
 
+import com.bluemarien.everythingplugin.EverythingPlugin;
+
+import net.milkbowl.vault.permission.Permission;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -7,16 +11,13 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.bluemarien.everythingplugin.EverythingPlugin;
-
-import net.milkbowl.vault.permission.Permission;
 
 /**
  * This class represents the xpshare command. The xpshare command is used to give xp levels to other
  * players on the server.
  *
  * @author Anthony Farina
- * @version 2020.06.28
+ * @version 2020.07.12
  */
 public class Xpshare implements CommandExecutor {
 

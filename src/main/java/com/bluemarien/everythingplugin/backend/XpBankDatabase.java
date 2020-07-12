@@ -1,5 +1,7 @@
 package com.bluemarien.everythingplugin.backend;
 
+import com.bluemarien.everythingplugin.EverythingPlugin;
+
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
@@ -11,14 +13,13 @@ import java.sql.Statement;
 
 import org.bukkit.entity.Player;
 
-import com.bluemarien.everythingplugin.EverythingPlugin;
 
 /**
  * This class represents an xp bank database that this plugin uses to store data about players on
  * the server this plugin is installed with. It uses SQLite to handle database functionality.
  *
  * @author Anthony Farina
- * @version 2020.06.30
+ * @version 2020.07.12
  */
 public class XpBankDatabase {
 
@@ -191,15 +192,6 @@ public class XpBankDatabase {
     }
 
     /**
-     * Check if the database exists.
-     *
-     * @return True if the database exists, false otherwise.
-     */
-    private boolean xpBankDatabaseExists() {
-        return Files.exists(Paths.get(databasePath));
-    }
-
-    /**
      * Creates a new xp bank database in the EverythingPlugin directory and creates a table in the
      * xp bank database.
      */
@@ -244,4 +236,11 @@ public class XpBankDatabase {
             // Bukkit.getServer().getPluginManager().disablePlugin(EverythingPlugin);
         }
     }
+
+    /**
+     * Check if the database exists.
+     *
+     * @return True if the database exists, false otherwise.
+     */
+    private boolean xpBankDatabaseExists() { return Files.exists(Paths.get(databasePath)); }
 }
