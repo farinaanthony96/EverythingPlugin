@@ -91,13 +91,15 @@ public class Xpshare implements CommandExecutor {
             }
             // The experience level given was not a number.
             catch (NumberFormatException e) {
-                commandPlayer.sendMessage(ChatColor.RED + "You must provide a positive integer level!");
+                commandPlayer.sendMessage(ChatColor.RED + "You must provide a positive integer " +
+                        "level!");
                 return true;
             }
 
             // Check if the player provided a positive integer level.
             if (level < 1) {
-                commandPlayer.sendMessage(ChatColor.RED + "You must provide a positive integer level!");
+                commandPlayer.sendMessage(ChatColor.RED + "You must provide a positive integer " +
+                        "level!");
                 return true;
             }
 

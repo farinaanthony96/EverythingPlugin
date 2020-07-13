@@ -15,7 +15,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
- * This class represents the warp command. This command is used to create, delete, list, and teleport to existing warps set on the server.
+ * This class represents the warp command. This command is used to create, delete, list, and
+ * teleport to existing warps set on the server.
  *
  * @author Anthony Farina
  * @version 2020.07.12
@@ -125,7 +126,8 @@ public class Warp implements CommandExecutor {
             if (args[0].equals("create") || args[0].equals("c")) {
                 // Check if the player is naming a warp after a command.
                 if (args[1].equals("create") || args[1].equals("c") || args[1].equals("delete") || args[1].equals("d") || args[1].equals("list") || args[1].equals("l") || args[1].equals("help") || args[1].equals("?")) {
-                    commandPlayer.sendMessage(ChatColor.RED + "You cannot name a warp after a warp command!");
+                    commandPlayer.sendMessage(ChatColor.RED + "You cannot name a warp after a " +
+                            "warp command!");
                     return true;
                 }
 

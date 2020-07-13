@@ -16,7 +16,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 
 /**
- * This class represents a warp database that this plugin uses to store data about the warps on the server. It uses the YAML configuration object from the Spigot API to handle database functionality.
+ * This class represents a warp database that this plugin uses to store data about the warps on the
+ * server. It uses the YAML configuration object from the Spigot API to handle database
+ * functionality.
  *
  * @author Anthony Farina
  * @version 2020.07.12
@@ -26,12 +28,14 @@ public class WarpDatabase {
     /**
      * Declare and initialize warp database fields.
      */
-    private final String warpDatabasePath = EverythingPlugin.getPluginFolderPath() + "/" + EverythingPlugin.getWarpDBName();
+    private final String warpDatabasePath =
+            EverythingPlugin.getPluginFolderPath() + "/" + EverythingPlugin.getWarpDBName();
     private FileConfiguration warpDatabase = null;
     private File warpDatabaseFile = null;
 
     /**
-     * Loads an existing warp database or, if necessary, creates a new database if one doesn't exist.
+     * Loads an existing warp database or, if necessary, creates a new database if one doesn't
+     * exist.
      */
     public WarpDatabase() {
         // Make the file object to reference the warp database.
@@ -50,7 +54,7 @@ public class WarpDatabase {
     /**
      * Inserts a new warp location with the provided warp name and location into the warp database.
      *
-     * @param warp The location of the warp to save.
+     * @param warp     The location of the warp to save.
      * @param warpName The name of the warp.
      */
     public void insertWarp(Location warp, String warpName) {
@@ -91,10 +95,13 @@ public class WarpDatabase {
     }
 
     /**
-     * Removes a warp from the warp database. Returns true if the warp was removed successfully, or false if the warp doesn't exist.
+     * Removes a warp from the warp database. Returns true if the warp was removed successfully, or
+     * false if the warp doesn't exist.
      *
      * @param warpName The warp to remove from the database.
-     * @return True if the warp was removed successfully, false if the warp doesn't exist in the database.
+     *
+     * @return True if the warp was removed successfully, false if the warp doesn't exist in the
+     * database.
      */
     public boolean removeWarp(String warpName) {
         // Check if the warp exists in the database.
@@ -131,7 +138,8 @@ public class WarpDatabase {
         }
         // An error occurred while trying to save the warp database.
         catch (IOException e) {
-            EverythingPlugin.getEPLogger().info(ChatColor.RED + "An error occurred saving the warp database file!");
+            EverythingPlugin.getEPLogger().info(ChatColor.RED + "An error occurred saving the " +
+                    "warp database file!");
             return false;
         }
 
@@ -151,7 +159,8 @@ public class WarpDatabase {
         }
         // An error occurred while trying to reload the warp database.
         catch (IllegalArgumentException e) {
-            EverythingPlugin.getEPLogger().info(ChatColor.RED + "An error occurred reloading the warp database file!");
+            EverythingPlugin.getEPLogger().info(ChatColor.RED + "An error occurred reloading the " +
+                    "warp database file!");
             return false;
         }
 
@@ -171,7 +180,8 @@ public class WarpDatabase {
         }
         // An error occurred while creating a new warp database file.
         catch (IOException e) {
-            EverythingPlugin.getEPLogger().info(ChatColor.RED + "An error occurred creating the warp database!");
+            EverythingPlugin.getEPLogger().info(ChatColor.RED + "An error occurred creating the " +
+                    "warp database!");
             return false;
         }
 
@@ -184,5 +194,7 @@ public class WarpDatabase {
      *
      * @return True if the warp database already exists, false otherwise.
      */
-    private boolean warpDatabaseExists() { return Files.exists(Paths.get(warpDatabasePath)); }
+    private boolean warpDatabaseExists() {
+        return Files.exists(Paths.get(warpDatabasePath));
+    }
 }

@@ -60,7 +60,8 @@ public final class EverythingPlugin extends JavaPlugin {
 
         // Check if an error occurred setting up the EverythingPlugin directory.
         if (!setupPluginDirectory()) {
-            logger.info("An error occurred while creating the EverythingPlugin directory! Disabling plugin...");
+            logger.info("An error occurred while creating the EverythingPlugin directory! " +
+                    "Disabling plugin...");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
@@ -76,7 +77,8 @@ public final class EverythingPlugin extends JavaPlugin {
 
         // Check if an error occurred setting up the plugin's permission system.
         if (!setupPermissions()) {
-            logger.info("An error occurred while setting up the permission system! Disabling plugin...");
+            logger.info("An error occurred while setting up the permission system! Disabling " +
+                    "plugin...");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
@@ -156,7 +158,8 @@ public final class EverythingPlugin extends JavaPlugin {
      */
     private boolean setupPermissions() {
         // Get the service provider registration for permissions.
-        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+        RegisteredServiceProvider<Permission> rsp =
+                getServer().getServicesManager().getRegistration(Permission.class);
 
         // Check if the permissions registration was successful.
         if (rsp == null) {
@@ -188,47 +191,61 @@ public final class EverythingPlugin extends JavaPlugin {
      *
      * @return This plugin's logger object.
      */
-    public static Logger getEPLogger() { return logger; }
+    public static Logger getEPLogger() {
+        return logger;
+    }
 
     /**
      * Returns the plugin's folder path in the "plugins" directory.
      *
      * @return The plugin's folder path in the "plugins" directory.
      */
-    public static String getPluginFolderPath() { return pluginFolderPath; }
+    public static String getPluginFolderPath() {
+        return pluginFolderPath;
+    }
 
     /**
      * Returns the xp bank database object.
      *
      * @return The xp bank database object.
      */
-    public static XpBankDatabase getXpBankDatabase() { return xpBankDB; }
+    public static XpBankDatabase getXpBankDatabase() {
+        return xpBankDB;
+    }
 
     /**
      * Returns the name of the xp bank database.
      *
      * @return The name of the xp bank database.
      */
-    public static String getXpBankDBName() { return xpBankDBName; }
+    public static String getXpBankDBName() {
+        return xpBankDBName;
+    }
 
     /**
      * Returns the warp database object.
      *
      * @return The warp database object.
      */
-    public static WarpDatabase getWarpDatabase() { return warpDB; }
+    public static WarpDatabase getWarpDatabase() {
+        return warpDB;
+    }
 
     /**
      * Returns the name of the warp database.
      *
      * @return The name of the warp database.
      */
-    public static String getWarpDBName() { return warpDBName; }
+    public static String getWarpDBName() {
+        return warpDBName;
+    }
 
     /**
      * Returns the permission object to check for player permissions.
      *
      * @return The permission object.
      */
-    public static Permission getPermissions() { return perms; }
+    public static Permission getPermissions() {
+        return perms;
+    }
 }
