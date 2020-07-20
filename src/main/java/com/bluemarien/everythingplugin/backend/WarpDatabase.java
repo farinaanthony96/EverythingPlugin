@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -59,7 +60,7 @@ public class WarpDatabase {
      */
     public void insertWarp(Location warp, String warpName) {
         // Insert the warp location into the warp database labeled with the provided warp name.
-        warpDatabase.set("warps." + warpName + ".world", warp.getWorld().toString());
+        warpDatabase.set("warps." + warpName + ".world", Objects.requireNonNull(warp.getWorld()).getName());
         warpDatabase.set("warps." + warpName + ".x", warp.getX());
         warpDatabase.set("warps." + warpName + ".y", warp.getY());
         warpDatabase.set("warps." + warpName + ".z", warp.getZ());

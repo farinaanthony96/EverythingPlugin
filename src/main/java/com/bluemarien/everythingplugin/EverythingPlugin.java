@@ -19,6 +19,20 @@ import org.bukkit.plugin.java.JavaPlugin;
  * This class represents the EverythingPlugin plugin running on a Spigot server. The plugin's
  * description file is named "plugin.yml".
  *
+ * Features to add:
+ *   - Multihome
+ *   - Gifting
+ *   - Sign modding / coloring
+ *   - Backpacks
+ *   - Mob catching
+ *   - Distant farms
+ *   - Treecapitator
+ *
+ * Bugs to fix:
+ *   - /xpbank create should look for player login and check the database for their username.
+ *   - Warps that are numbers don't work
+ *   - /xpbank -> /xpb and /xpshare -> /xps
+ *
  * @author Anthony Farina
  * @version 2020.07.12
  */
