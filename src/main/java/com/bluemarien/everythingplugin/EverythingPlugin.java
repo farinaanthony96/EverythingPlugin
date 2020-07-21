@@ -2,6 +2,7 @@ package com.bluemarien.everythingplugin;
 
 import com.bluemarien.everythingplugin.backend.*;
 import com.bluemarien.everythingplugin.commands.*;
+import com.bluemarien.everythingplugin.eventlisteners.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,6 +11,7 @@ import java.util.logging.Logger;
 
 import net.milkbowl.vault.permission.Permission;
 
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -29,12 +31,11 @@ import org.bukkit.plugin.java.JavaPlugin;
  *   - Treecapitator
  *
  * Bugs to fix:
- *   - /xpbank create should look for player login and check the database for their username.
  *   - Warps that are numbers don't work
  *   - /xpbank -> /xpb and /xpshare -> /xps
  *
  * @author Anthony Farina
- * @version 2020.07.12
+ * @version 2020.07.21
  */
 public final class EverythingPlugin extends JavaPlugin {
 
@@ -58,6 +59,11 @@ public final class EverythingPlugin extends JavaPlugin {
     private static final String warpDBName = "warps.yml";
 
     /**
+     * Declare event listeners.
+     */
+    private PlayerJoinListener playerJoinListener = null;
+
+    /**
      * Declare a reference to the permissions manager for the plugin.
      */
     private static Permission perms = null;
@@ -69,19 +75,19 @@ public final class EverythingPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         // Get the plugin's description file (plugin.yml) and logger.
-        pdFile = getDescription();
-        logger = getLogger();
+        pdFile = this.getDescription();
+        logger = this.getLogger();
 
         // Check if an error occurred setting up the EverythingPlugin directory.
         if (!setupPluginDirectory()) {
             logger.info("An error occurred while creating the EverythingPlugin directory! " +
                     "Disabling plugin...");
-            getServer().getPluginManager().disablePlugin(this);
+            this.getServer().getPluginManager().disablePlugin(this);
             return;
         }
 
         // Load the plugin's commands.
-        loadCommands();
+        this.loadCommands();
 
         // Connect to or create a new XP bank database.
         xpBankDB = new XpBankDatabase();
@@ -89,11 +95,15 @@ public final class EverythingPlugin extends JavaPlugin {
         // Connect to or create a new warp database.
         warpDB = new WarpDatabase();
 
+        // Register event listeners.
+        playerJoinListener = new PlayerJoinListener();
+        this.getServer().getPluginManager().registerEvents(playerJoinListener, this);
+
         // Check if an error occurred setting up the plugin's permission system.
         if (!setupPermissions()) {
             logger.info("An error occurred while setting up the permission system! Disabling " +
                     "plugin...");
-            getServer().getPluginManager().disablePlugin(this);
+            this.getServer().getPluginManager().disablePlugin(this);
             return;
         }
 
@@ -115,6 +125,11 @@ public final class EverythingPlugin extends JavaPlugin {
         // Save the warp database.
         if (warpDB != null) {
             warpDB.saveWarpDatabase();
+        }
+
+        // Unregister event listeners.
+        if (playerJoinListener != null) {
+            HandlerList.unregisterAll(playerJoinListener);
         }
 
         // Disabled the plugin successfully.
@@ -156,11 +171,11 @@ public final class EverythingPlugin extends JavaPlugin {
         // Set the executor for each command in the plugin description file.
         logger.info("Loading commands...");
 
-        getCommand("heal").setExecutor(new Heal());
-        getCommand("feed").setExecutor(new Feed());
-        getCommand("xpshare").setExecutor(new Xpshare());
-        getCommand("xpbank").setExecutor(new Xpbank());
-        getCommand("warp").setExecutor(new Warp());
+        this.getCommand("heal").setExecutor(new Heal());
+        this.getCommand("feed").setExecutor(new Feed());
+        this.getCommand("xpshare").setExecutor(new Xpshare());
+        this.getCommand("xpbank").setExecutor(new Xpbank());
+        this.getCommand("warp").setExecutor(new Warp());
 
         logger.info("Commands loaded successfully!");
     }
@@ -173,7 +188,7 @@ public final class EverythingPlugin extends JavaPlugin {
     private boolean setupPermissions() {
         // Get the service provider registration for permissions.
         RegisteredServiceProvider<Permission> rsp =
-                getServer().getServicesManager().getRegistration(Permission.class);
+                this.getServer().getServicesManager().getRegistration(Permission.class);
 
         // Check if the permissions registration was successful.
         if (rsp == null) {

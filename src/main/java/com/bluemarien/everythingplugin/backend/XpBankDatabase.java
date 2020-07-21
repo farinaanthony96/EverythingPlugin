@@ -19,7 +19,7 @@ import org.bukkit.entity.Player;
  * the server this plugin is installed with. It uses SQLite to handle database functionality.
  *
  * @author Anthony Farina
- * @version 2020.07.12
+ * @version 2020.07.21
  */
 public class XpBankDatabase {
 
@@ -102,6 +102,36 @@ public class XpBankDatabase {
     }
 
     /**
+     * Checks if a player is in the xp bank database.
+     *
+     * @param player The player to check in the xp bank database.
+     *
+     * @return True if the given player is in the xp bank database, false otherwise.
+     */
+    public boolean isInXpBankDatabase(Player player) {
+        // Initialize the UUID of the player and the query for the database.
+        String uuid = player.getUniqueId().toString();
+        String query =
+                "SELECT UUID\n" + "FROM " + tableName + "\n" + "WHERE UUID LIKE '" + uuid + "';";
+
+        // Try to execute the query to see if the player is in the xp bank database.
+        try (Statement statement = conn.createStatement(); ResultSet result =
+                statement.executeQuery(query)) {
+            // Check if the player is in the xp bank database.
+            return result.next();
+        }
+        // An error occurred executing the query to the database, or while getting the
+        // player's xp bank balance.
+        catch (SQLException e) {
+            EverythingPlugin.getEPLogger().info("An error occurred while checking if " + player.getName() + " was in the xp bank database.");
+            EverythingPlugin.getEPLogger().info(e.getMessage());
+        }
+
+        // An error occurred.
+        return false;
+    }
+
+    /**
      * Gets the balance of the given player's xp bank.
      *
      * @param player The player to get the xp bank balance for.
@@ -112,9 +142,7 @@ public class XpBankDatabase {
         // Initialize the UUID of the player, the query for the database, and the level
         // variable.
         String uuid = player.getUniqueId().toString();
-        String query =
-                "SELECT UUID, XP\n" + "FROM " + tableName + "\n" + "WHERE UUID LIKE '" + uuid +
-                        "';";
+        String query = "SELECT UUID, XP\n" + "FROM " + tableName + "\n" + "WHERE UUID LIKE '" + uuid + "';";
         int levelsInBank = 0;
 
         // Try to execute the query and get the player's xp bank balance.
