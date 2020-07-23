@@ -22,6 +22,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * description file is named "plugin.yml".
  *
  * Features to add:
+ *   - Alias for /xpbank (/xpb) and /xpshare (/xps)
  *   - Multihome
  *   - Gifting
  *   - Sign modding / coloring
@@ -31,11 +32,9 @@ import org.bukkit.plugin.java.JavaPlugin;
  *   - Treecapitator
  *
  * Bugs to fix:
- *   - Warps that are numbers don't work
- *   - /xpbank -> /xpb and /xpshare -> /xps
  *
  * @author Anthony Farina
- * @version 2020.07.21
+ * @version 2020.07.22
  */
 public final class EverythingPlugin extends JavaPlugin {
 
@@ -124,7 +123,9 @@ public final class EverythingPlugin extends JavaPlugin {
 
         // Save the warp database.
         if (warpDB != null) {
+            logger.info("Saving the warp database...");
             warpDB.saveWarpDatabase();
+            logger.info("Saved the warp database successfully!");
         }
 
         // Unregister event listeners.

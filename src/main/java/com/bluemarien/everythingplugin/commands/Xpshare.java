@@ -17,7 +17,7 @@ import org.bukkit.entity.Player;
  * players on the server.
  *
  * @author Anthony Farina
- * @version 2020.07.12
+ * @version 2020.07.22
  */
 public class Xpshare implements CommandExecutor {
 
@@ -63,6 +63,7 @@ public class Xpshare implements CommandExecutor {
         if (args.length == 0) {
             // Show the player the usage of "/xpshare".
             commandPlayer.sendMessage(ChatColor.GOLD + "Usage of \"/xpshare\":");
+            commandPlayer.sendMessage(ChatColor.GOLD + "/xpshare [help | ?]");
             commandPlayer.sendMessage(ChatColor.GOLD + "/xpshare <level> <player>");
             return true;
         }
@@ -72,12 +73,14 @@ public class Xpshare implements CommandExecutor {
             if (args[0].equals("help") || args[0].equals("?")) {
                 // Show the player the usage of "/xpshare".
                 commandPlayer.sendMessage(ChatColor.GOLD + "Usage of \"/xpshare\":");
+                commandPlayer.sendMessage(ChatColor.GOLD + "/xpshare [help | ?]");
                 commandPlayer.sendMessage(ChatColor.GOLD + "/xpshare <level> <player>");
                 return true;
             }
 
             // The player typed an invalid subcommand.
             commandPlayer.sendMessage(ChatColor.RED + "Unknown subcommand! Proper syntax is:");
+            commandPlayer.sendMessage(ChatColor.RED + "/xpshare [help | ?]");
             commandPlayer.sendMessage(ChatColor.RED + "/xpshare <level> <player>");
             return true;
         }
@@ -133,6 +136,7 @@ public class Xpshare implements CommandExecutor {
         else {
             // The player gave too many arguments.
             commandPlayer.sendMessage(ChatColor.RED + "Too many arguments! Proper syntax is:");
+            commandPlayer.sendMessage(ChatColor.RED + "/xpshare [help | ?]");
             commandPlayer.sendMessage(ChatColor.RED + "/xpshare <level> <player>");
             return true;
         }

@@ -22,7 +22,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
  * functionality.
  *
  * @author Anthony Farina
- * @version 2020.07.12
+ * @version 2020.07.22
  */
 public class WarpDatabase {
 
@@ -45,11 +45,18 @@ public class WarpDatabase {
         // Check if the warp database exists.
         if (!warpDatabaseExists()) {
             // Create and initialize a new warp database.
+            EverythingPlugin.getEPLogger().info("No warp database detected! Creating a new warp " +
+                    "database...");
             createWarpDatabase();
         }
-
-        // Load the warp database.
-        warpDatabase = YamlConfiguration.loadConfiguration(warpDatabaseFile);
+        // The warp database already exists.
+        else {
+            // Load the warp database.
+            EverythingPlugin.getEPLogger().info("Connecting to the existing warp database...");
+            warpDatabase = YamlConfiguration.loadConfiguration(warpDatabaseFile);
+            EverythingPlugin.getEPLogger().info("Connected to the existing warp database " +
+                    "successfully!");
+        }
     }
 
     /**
@@ -60,7 +67,8 @@ public class WarpDatabase {
      */
     public void insertWarp(Location warp, String warpName) {
         // Insert the warp location into the warp database labeled with the provided warp name.
-        warpDatabase.set("warps." + warpName + ".world", Objects.requireNonNull(warp.getWorld()).getName());
+        warpDatabase.set("warps." + warpName + ".world",
+                Objects.requireNonNull(warp.getWorld()).getName());
         warpDatabase.set("warps." + warpName + ".x", warp.getX());
         warpDatabase.set("warps." + warpName + ".y", warp.getY());
         warpDatabase.set("warps." + warpName + ".z", warp.getZ());
@@ -119,12 +127,10 @@ public class WarpDatabase {
     /**
      * Returns a set of Strings containing all the warp names stored in the database.
      *
-     * @param section The section of the YAML file to list.
-     *
      * @return A set of Strings containing all the warp names stored in the database.
      */
-    public Set<String> listWarps(String section) {
-        return warpDatabase.getConfigurationSection(section).getKeys(false);
+    public Set<String> listWarps() {
+        return warpDatabase.getConfigurationSection("warps").getKeys(false);
     }
 
     /**
@@ -155,6 +161,8 @@ public class WarpDatabase {
      */
     public boolean reloadWarpDatabase() {
         // Try to reload the warp database.
+        EverythingPlugin.getEPLogger().info("Reloading the warp database...");
+
         try {
             warpDatabase = YamlConfiguration.loadConfiguration(warpDatabaseFile);
         }
@@ -166,6 +174,7 @@ public class WarpDatabase {
         }
 
         // The warp database was reloaded successfully.
+        EverythingPlugin.getEPLogger().info("Reloaded the warp database successfully!");
         return true;
     }
 
@@ -187,6 +196,10 @@ public class WarpDatabase {
         }
 
         // A new warp database was created successfully.
+        warpDatabase = YamlConfiguration.loadConfiguration(warpDatabaseFile);
+        warpDatabase.createSection("warps");
+        EverythingPlugin.getEPLogger().info("Created and connected to the new warp database " +
+                "successfully!");
         return true;
     }
 

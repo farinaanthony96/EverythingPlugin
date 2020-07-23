@@ -19,7 +19,7 @@ import org.bukkit.entity.Player;
  * teleport to existing warps set on the server.
  *
  * @author Anthony Farina
- * @version 2020.07.12
+ * @version 2020.07.22
  */
 public class Warp implements CommandExecutor {
 
@@ -89,7 +89,7 @@ public class Warp implements CommandExecutor {
             // Check if the player typed "/warp list" or "/warp l".
             else if (args[0].equals("list") || args[0].equals("l")) {
                 // Get the list of all warp names in the database and prepare the warp list message.
-                Set<String> warpNames = warpDB.listWarps("warps");
+                Set<String> warpNames = warpDB.listWarps();
                 StringBuilder warpMessage = new StringBuilder(ChatColor.GOLD + "Warps: ");
 
                 // Put all the warp names in the warp list message.

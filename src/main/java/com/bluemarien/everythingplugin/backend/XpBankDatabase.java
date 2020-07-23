@@ -142,7 +142,9 @@ public class XpBankDatabase {
         // Initialize the UUID of the player, the query for the database, and the level
         // variable.
         String uuid = player.getUniqueId().toString();
-        String query = "SELECT UUID, XP\n" + "FROM " + tableName + "\n" + "WHERE UUID LIKE '" + uuid + "';";
+        String query =
+                "SELECT UUID, XP\n" + "FROM " + tableName + "\n" + "WHERE UUID LIKE '" + uuid +
+                        "';";
         int levelsInBank = 0;
 
         // Try to execute the query and get the player's xp bank balance.
@@ -233,7 +235,8 @@ public class XpBankDatabase {
             conn = DriverManager.getConnection(localPath);
 
             // Initialize the query for creating a new table.
-            String statement = "CREATE TABLE IF NOT EXISTS " + tableName + " (\n" + "	UUID text" +
+            String statement = "CREATE TABLE IF NOT EXISTS " + tableName + " (\n" + "	UUID " +
+                    "text" +
                     " " +
                     "UNIQUE,\n"
                     + "	XP integer CHECK(XP >= 0)\n" + ");";

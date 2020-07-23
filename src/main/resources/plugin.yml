@@ -17,7 +17,7 @@ commands:
     usage: /xpshare [help | ?] | /xpshare <levels> <player>
   xpbank:
     description: Stores the player's xp levels.
-    usage: /xpbank [help | ?] | /xpbank top10 | /xpb <deposit | d | withdrawal | w> <levels>
+    usage: /xpbank [help | ?] | /xpbank top10 | /xpbank <deposit | d | withdrawal | w> <levels>
   warp:
     description: Teleports players to warp locations.
-    usage: /warp [help | ?] | /warp <list> | /warp <warp name> | /warp <create | c> <warp name> | /warp <delete | d> <warp name>
+    usage: /warp [help | ?] | /warp <list | l> | /warp <warp name> | /warp <create | c> <warp name> | /warp <delete | d> <warp name>
