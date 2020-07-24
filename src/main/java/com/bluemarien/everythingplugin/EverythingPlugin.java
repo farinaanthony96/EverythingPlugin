@@ -30,7 +30,6 @@ import org.bukkit.plugin.java.JavaPlugin;
  *   - Treecapitator
  *
  * Bugs to fix:
- *   - Players gifting nothing
  *
  * @author Anthony Farina
  * @version 2020.07.24

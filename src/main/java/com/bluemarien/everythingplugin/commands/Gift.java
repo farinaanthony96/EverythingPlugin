@@ -75,6 +75,11 @@ public class Gift implements CommandExecutor {
                 return true;
             }
 
+            // Check if the player is trying to gift nothing.
+            if (commandPlayer.getInventory().getItemInMainHand().getAmount() == 0) {
+                commandPlayer.sendMessage(ChatColor.RED + "You cannot gift nothing!");
+            }
+
             // Get the receiving player from the first command parameter.
             Player receiver = Bukkit.getServer().getPlayer(args[0]);
 
@@ -85,16 +90,27 @@ public class Gift implements CommandExecutor {
                 return true;
             }
 
+            // Check if the player is trying to gift themselves.
+            if (receiver.getName().equals(commandPlayer.getName())) {
+                commandPlayer.sendMessage(ChatColor.RED + "You cannot gift yourself!");
+                return true;
+            }
+
             // Gift the receiving player the contents of the sender's main hand.
             ItemStack gift = commandPlayer.getInventory().getItemInMainHand();
             commandPlayer.getInventory().setItemInMainHand(null);
             receiver.getInventory().addItem(gift);
-            commandPlayer.sendMessage(ChatColor.GOLD + "You have gifted " + " " + gift.getAmount() + " " + gift.toString() + " to " + receiver.getName() + ".");
-            receiver.sendMessage(ChatColor.GOLD + "You have been gifted " + gift.getAmount() + " " + gift.toString() + " from " + commandPlayer.getName() + ".");
+            commandPlayer.sendMessage(ChatColor.GOLD + "You have gifted " + gift.getAmount() + " " + gift.getType().toString() + " to " + receiver.getName() + ".");
+            receiver.sendMessage(ChatColor.GOLD + "You have been gifted " + gift.getAmount() + " " + gift.getType().toString() + " from " + commandPlayer.getName() + ".");
             return true;
         }
         // Check if the player typed "/gift (something) (something)".
         else if (args.length == 2) {
+            // Check if the player is trying to gift nothing.
+            if (commandPlayer.getInventory().getItemInMainHand().getAmount() == 0) {
+                commandPlayer.sendMessage(ChatColor.RED + "You cannot gift nothing!");
+            }
+
             // Get the receiving player from the first command parameter.
             Player receiver = Bukkit.getServer().getPlayer(args[0]);
 
@@ -102,6 +118,12 @@ public class Gift implements CommandExecutor {
             if (receiver == null) {
                 commandPlayer.sendMessage(ChatColor.RED + "The player " + args[0] + " is not on " +
                         "this server!");
+                return true;
+            }
+
+            // Check if the player is trying to gift themselves.
+            if (receiver.getName().equals(commandPlayer.getName())) {
+                commandPlayer.sendMessage(ChatColor.RED + "You cannot gift yourself!");
                 return true;
             }
 
@@ -129,13 +151,13 @@ public class Gift implements CommandExecutor {
             }
 
             // Gift the receiving player the contents of the sender's main hand.
+            int originalAmount = commandPlayer.getInventory().getItemInMainHand().getAmount();
             ItemStack gift = commandPlayer.getInventory().getItemInMainHand();
             gift.setAmount(amount);
-            int originalAmount = commandPlayer.getInventory().getItemInMainHand().getAmount();
             commandPlayer.getInventory().getItemInMainHand().setAmount(originalAmount - amount);
             receiver.getInventory().addItem(gift);
-            commandPlayer.sendMessage(ChatColor.GOLD + "You have gifted " + " " + gift.getAmount() + " " + gift.toString() + " to " + receiver.getName() + ".");
-            receiver.sendMessage(ChatColor.GOLD + "You have been gifted " + gift.getAmount() + " " + gift.toString() + " from " + commandPlayer.getName() + ".");
+            commandPlayer.sendMessage(ChatColor.GOLD + "You have gifted " + gift.getAmount() + " " + gift.getType().toString() + " to " + receiver.getName() + ".");
+            receiver.sendMessage(ChatColor.GOLD + "You have been gifted " + gift.getAmount() + " " + gift.getType().toString() + " from " + commandPlayer.getName() + ".");
             return true;
         }
         // The player typed more than 2 arguments to the command.
