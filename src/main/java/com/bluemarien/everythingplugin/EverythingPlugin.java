@@ -23,7 +23,6 @@ import org.bukkit.plugin.java.JavaPlugin;
  *
  * Features to add:
  *   - Multihome
- *   - Gifting
  *   - Sign modding / coloring
  *   - Backpacks
  *   - Mob catching
@@ -31,6 +30,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  *   - Treecapitator
  *
  * Bugs to fix:
+ *   - Players gifting nothing
  *
  * @author Anthony Farina
  * @version 2020.07.24
@@ -176,6 +176,7 @@ public final class EverythingPlugin extends JavaPlugin {
         this.getCommand("xpshare").setExecutor(new Xpshare());
         this.getCommand("xpbank").setExecutor(new Xpbank());
         this.getCommand("warp").setExecutor(new Warp());
+        this.getCommand("gift").setExecutor(new Gift());
 
         logger.info("Commands loaded successfully!");
     }

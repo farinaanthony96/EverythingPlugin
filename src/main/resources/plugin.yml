@@ -4,7 +4,7 @@ main: com.bluemarien.everythingplugin.EverythingPlugin
 api-version: 1.16
 depend: [Vault]
 authors: [Bluemarien]
-description: Adds misc. features like heal, feed, xp sharing, and an xp bank.
+description: Adds misc. features like heal, feed, xp sharing, xp banks, warping, and gifting.
 commands:
   heal:
     description: Heals the player to full health.
@@ -23,3 +23,6 @@ commands:
   warp:
     description: Teleports players to warp locations.
     usage: /warp [help | ?] | /warp <list | l> | /warp <warp name> | /warp <create | c> <warp name> | /warp <delete | d> <warp name>
+  gift:
+    description: Gift items to other players.
+    usage: /gift [help | ?] | /gift <player> [amount]
