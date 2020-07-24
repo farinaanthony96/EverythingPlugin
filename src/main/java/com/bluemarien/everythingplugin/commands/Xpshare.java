@@ -17,7 +17,7 @@ import org.bukkit.entity.Player;
  * players on the server.
  *
  * @author Anthony Farina
- * @version 2020.07.22
+ * @version 2020.07.24
  */
 public class Xpshare implements CommandExecutor {
 

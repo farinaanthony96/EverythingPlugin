@@ -22,7 +22,6 @@ import org.bukkit.plugin.java.JavaPlugin;
  * description file is named "plugin.yml".
  *
  * Features to add:
- *   - Alias for /xpbank (/xpb) and /xpshare (/xps)
  *   - Multihome
  *   - Gifting
  *   - Sign modding / coloring
@@ -34,7 +33,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * Bugs to fix:
  *
  * @author Anthony Farina
- * @version 2020.07.22
+ * @version 2020.07.24
  */
 public final class EverythingPlugin extends JavaPlugin {
 

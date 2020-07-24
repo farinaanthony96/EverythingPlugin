@@ -18,7 +18,7 @@ import org.bukkit.entity.Player;
  * experience banks, deposit, and withdraw experience levels.
  *
  * @author Anthony Farina
- * @version 2020.07.12
+ * @version 2020.07.24
  */
 public class Xpbank implements CommandExecutor {
 
