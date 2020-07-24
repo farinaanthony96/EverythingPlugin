@@ -36,7 +36,7 @@ public class Xpshare implements CommandExecutor {
                              String[] args) {
 
         // Check if the command being run is "/xpshare".
-        if (!commandLabel.equals("xpshare")) {
+        if (!command.getName().equals("xpshare")) {
             // The command was not handled properly.
             return false;
         }

@@ -15,9 +15,11 @@ commands:
   xpshare:
     description: Give other players xp levels.
     usage: /xpshare [help | ?] | /xpshare <levels> <player>
+    aliases: [xps]
   xpbank:
     description: Stores the player's xp levels.
     usage: /xpbank [help | ?] | /xpbank top10 | /xpbank <deposit | d | withdrawal | w> <levels>
+    aliases: [xpb]
   warp:
     description: Teleports players to warp locations.
     usage: /warp [help | ?] | /warp <list | l> | /warp <warp name> | /warp <create | c> <warp name> | /warp <delete | d> <warp name>

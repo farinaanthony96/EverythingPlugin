@@ -37,7 +37,7 @@ public class Xpbank implements CommandExecutor {
                              String[] args) {
 
         // Check if the command being run is "/xpbank".
-        if (!commandLabel.equals("xpbank")) {
+        if (!command.getName().equals("xpbank")) {
             // The command was not handled properly.
             return false;
         }
