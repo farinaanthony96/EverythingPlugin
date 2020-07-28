@@ -4,7 +4,7 @@ main: com.bluemarien.everythingplugin.EverythingPlugin
 api-version: 1.16
 depend: [Vault]
 authors: [Bluemarien]
-description: Adds misc. features like heal, feed, xp sharing, xp banks, warping, and gifting.
+description: Adds misc. features like heal, feed, xp sharing, xp banks, warping, gifting, and homes.
 commands:
   heal:
     description: Heals the player to full health.
@@ -26,3 +26,15 @@ commands:
   gift:
     description: Gift items to other players.
     usage: /gift [help | ?] | /gift <player> [amount]
+  home:
+    description: Teleports the player home.
+    usage: /home [home name]
+  sethome:
+    description: Sets a new home for the player.
+    usage: /sethome [home name]
+  delhome:
+    description: Deletes a player's home.
+    usage: /delhome <home name>
+  listhomes:
+    description: Lists all the player's homes.
+    usage: /listhomes

@@ -2,6 +2,7 @@ package com.bluemarien.everythingplugin;
 
 import com.bluemarien.everythingplugin.backend.*;
 import com.bluemarien.everythingplugin.commands.*;
+import com.bluemarien.everythingplugin.commands.multihome.*;
 import com.bluemarien.everythingplugin.eventlisteners.*;
 
 import java.io.IOException;
@@ -22,7 +23,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * description file is named "plugin.yml".
  *
  * Features to add:
- *   - Multihome
+ *   - Multihome (admin commands to modify / teleport to other player's homes)
  *   - Sign modding / coloring
  *   - Backpacks
  *   - Mob catching
@@ -33,7 +34,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  *
  *
  * @author Anthony Farina
- * @version 2020.07.24
+ * @version 2020.07.28
  */
 public final class EverythingPlugin extends JavaPlugin {
 
@@ -55,6 +56,12 @@ public final class EverythingPlugin extends JavaPlugin {
      */
     private static WarpDatabase warpDB = null;
     private static final String warpDBName = "warps.yml";
+
+    /**
+     * Declare multihome database fields.
+     */
+    private static MultihomeDatabase multihomeDB = null;
+    private static final String multihomeDBName = "multihomes.yml";
 
     /**
      * Declare event listeners.
@@ -93,6 +100,9 @@ public final class EverythingPlugin extends JavaPlugin {
         // Connect to or create a new warp database.
         warpDB = new WarpDatabase();
 
+        // Connect to or create a new multihome database.
+        multihomeDB = new MultihomeDatabase();
+
         // Register event listeners.
         playerJoinListener = new PlayerJoinListener();
         this.getServer().getPluginManager().registerEvents(playerJoinListener, this);
@@ -125,6 +135,13 @@ public final class EverythingPlugin extends JavaPlugin {
             logger.info("Saving the warp database...");
             warpDB.saveWarpDatabase();
             logger.info("Saved the warp database successfully!");
+        }
+
+        // Save the multihome database.
+        if (multihomeDB != null) {
+            logger.info("Saving the multihome database...");
+            multihomeDB.saveMultihomeDatabase();
+            logger.info("Saved the multihome database successfully!");
         }
 
         // Unregister event listeners.
@@ -177,6 +194,10 @@ public final class EverythingPlugin extends JavaPlugin {
         this.getCommand("xpbank").setExecutor(new Xpbank());
         this.getCommand("warp").setExecutor(new Warp());
         this.getCommand("gift").setExecutor(new Gift());
+        this.getCommand("home").setExecutor(new Home());
+        this.getCommand("sethome").setExecutor(new Sethome());
+        this.getCommand("delhome").setExecutor(new Delhome());
+        this.getCommand("listhomes").setExecutor(new Listhomes());
 
         logger.info("Commands loaded successfully!");
     }
@@ -268,6 +289,24 @@ public final class EverythingPlugin extends JavaPlugin {
      */
     public static String getWarpDBName() {
         return warpDBName;
+    }
+
+    /**
+     * Returns the multihome database object.
+     *
+     * @return The multihome database object.
+     */
+    public static MultihomeDatabase getMultihomeDatabase() {
+        return multihomeDB;
+    }
+
+    /**
+     * Returns the name of the multihome database.
+     *
+     * @return The name of the multihome database.
+     */
+    public static String getMultihomeDBName() {
+        return multihomeDBName;
     }
 
     /**
