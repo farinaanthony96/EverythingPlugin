@@ -3,11 +3,13 @@ package com.bluemarien.everythingplugin;
 import com.bluemarien.everythingplugin.backend.*;
 import com.bluemarien.everythingplugin.commands.*;
 import com.bluemarien.everythingplugin.commands.multihome.*;
+import com.bluemarien.everythingplugin.commands.warp.*;
 import com.bluemarien.everythingplugin.eventlisteners.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 import net.milkbowl.vault.permission.Permission;
@@ -29,12 +31,13 @@ import org.bukkit.plugin.java.JavaPlugin;
  *   - Mob catching
  *   - Distant farms
  *   - Treecapitator
+ *   - Tab complete for all commands
  *
  * Bugs to fix:
  *
  *
  * @author Anthony Farina
- * @version 2020.07.28
+ * @version 2020.07.29
  */
 public final class EverythingPlugin extends JavaPlugin {
 
@@ -188,16 +191,28 @@ public final class EverythingPlugin extends JavaPlugin {
         // Set the executor for each command in the plugin description file.
         logger.info("Loading commands...");
 
-        this.getCommand("heal").setExecutor(new Heal());
-        this.getCommand("feed").setExecutor(new Feed());
-        this.getCommand("xpshare").setExecutor(new Xpshare());
-        this.getCommand("xpbank").setExecutor(new Xpbank());
-        this.getCommand("warp").setExecutor(new Warp());
-        this.getCommand("gift").setExecutor(new Gift());
-        this.getCommand("home").setExecutor(new Home());
-        this.getCommand("sethome").setExecutor(new Sethome());
-        this.getCommand("delhome").setExecutor(new Delhome());
-        this.getCommand("listhomes").setExecutor(new Listhomes());
+        // Register commands with the server.
+        try {
+            Objects.requireNonNull(this.getCommand("heal")).setExecutor(new Heal());
+            Objects.requireNonNull(this.getCommand("feed")).setExecutor(new Feed());
+            Objects.requireNonNull(this.getCommand("xpshare")).setExecutor(new Xpshare());
+            Objects.requireNonNull(this.getCommand("xpbank")).setExecutor(new Xpbank());
+            Objects.requireNonNull(this.getCommand("warp")).setExecutor(new Warp());
+            Objects.requireNonNull(this.getCommand("setwarp")).setExecutor(new Setwarp());
+            Objects.requireNonNull(this.getCommand("delwarp")).setExecutor(new Delwarp());
+            Objects.requireNonNull(this.getCommand("listwarps")).setExecutor(new Listwarps());
+            Objects.requireNonNull(this.getCommand("gift")).setExecutor(new Gift());
+            Objects.requireNonNull(this.getCommand("home")).setExecutor(new Home());
+            Objects.requireNonNull(this.getCommand("sethome")).setExecutor(new Sethome());
+            Objects.requireNonNull(this.getCommand("delhome")).setExecutor(new Delhome());
+            Objects.requireNonNull(this.getCommand("listhomes")).setExecutor(new Listhomes());
+        }
+        // An error occurred registering the commands.
+        catch (NullPointerException e) {
+            logger.severe(e.getMessage());
+            logger.severe("An error occurred while loading the commands! Disabling plugin...");
+            this.getServer().getPluginManager().disablePlugin(this);
+        }
 
         logger.info("Commands loaded successfully!");
     }
@@ -218,23 +233,12 @@ public final class EverythingPlugin extends JavaPlugin {
             return false;
         }
 
-        // Get the permissions provider.
+        // Set the permissions provider variable for the plugin.
         perms = rsp.getProvider();
 
-        // Check if the permissions provider exists.
-        if (perms == null) {
-            // The permissions provider doesn't exist.
-            return false;
-        }
-
-        // Check if Vault is installed on the server.
-        if (getServer().getPluginManager().getPlugin("Vault") == null) {
-            // Vault is not installed on the server.
-            return false;
-        }
-
-        // Permissions were set up successfully.
-        return true;
+        // Check if Vault is installed on the server and return true since permissions have been
+        // set up successfully, or false if Vault isn't installed.
+        return getServer().getPluginManager().getPlugin("Vault") != null;
     }
 
     /**
