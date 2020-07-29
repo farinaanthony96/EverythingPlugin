@@ -27,7 +27,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public class WarpDatabase {
 
     /**
-     * Declare and initialize warp database fields.
+     * Declare and initialize the warp database path and file objects.
      */
     private final String warpDatabasePath =
             EverythingPlugin.getPluginFolderPath() + "/" + EverythingPlugin.getWarpDBName();
@@ -49,9 +49,9 @@ public class WarpDatabase {
                     "database...");
             createWarpDatabase();
         }
-        // The warp database already exists.
+        // The warp database exists.
         else {
-            // Load the warp database.
+            // Load the existing warp database.
             EverythingPlugin.getEPLogger().info("Connecting to the existing warp database...");
             warpDatabase = YamlConfiguration.loadConfiguration(warpDatabaseFile);
             EverythingPlugin.getEPLogger().info("Connected to the existing warp database " +
