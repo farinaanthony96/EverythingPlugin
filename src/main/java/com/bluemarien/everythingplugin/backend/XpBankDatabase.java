@@ -19,12 +19,13 @@ import org.bukkit.entity.Player;
  * the server. It uses SQLite to handle database functionality.
  *
  * @author Anthony Farina
- * @version 2020.07.29
+ * @version 2020.07.30
  */
 public class XpBankDatabase {
 
     /**
-     * Make sure other classes can access the DEPOSIT and WITHDRAW enumerations for xp bank actions.
+     * Make sure other classes can access the DEPOSIT and WITHDRAW enumerations for xp bank
+     * actions.
      */
     public enum BankAction {
         DEPOSIT, WITHDRAW
@@ -47,7 +48,8 @@ public class XpBankDatabase {
         // Check if the xp bank database already exists.
         if (!xpBankDatabaseExists()) {
             // Create and initialize a new xp bank database.
-            EverythingPlugin.getEPLogger().info("No xp bank database detected! Creating a new xp bank database...");
+            EverythingPlugin.getEPLogger().info("No xp bank database detected! Creating a new xp " +
+                    "bank database...");
             createXPBankDatabase();
         }
         // The xp bank database exists.
@@ -60,7 +62,8 @@ public class XpBankDatabase {
             }
             // An error occurred connecting to the existing xp bank database.
             catch (SQLException e) {
-                EverythingPlugin.getEPLogger().severe("Error connecting to the existing xp bank database!");
+                EverythingPlugin.getEPLogger().severe("Error connecting to the existing xp bank " +
+                        "database!");
                 EverythingPlugin.getEPLogger().severe(e.getMessage());
                 return;
             }
@@ -71,7 +74,7 @@ public class XpBankDatabase {
     }
 
     /**
-     * Insert a player into the xp bank database.
+     * Insert a player with 0 xp levels in their xp bank into the xp bank database.
      *
      * @param player The player to insert into the xp bank database.
      */
@@ -88,7 +91,8 @@ public class XpBankDatabase {
 
             // Make sure the query was successful.
             if (pstmt.executeUpdate() > 0) {
-                EverythingPlugin.getEPLogger().info("The player " + player.getName() + " has been added to the xp bank database!");
+                EverythingPlugin.getEPLogger().info("The player " + player.getName() + " has been" +
+                        " added to the xp bank database!");
             }
             // If that "if" statement failed, I'm unsure as to what happened.
         }
@@ -109,15 +113,18 @@ public class XpBankDatabase {
     public boolean isInXpBankDatabase(Player player) {
         // Declare and initialize strings for the UUID of the player and the query to the database.
         String UUID = player.getUniqueId().toString();
-        // String query = "SELECT UUID\n" + "FROM " + tableName + "\n" + "WHERE UUID LIKE '" + UUID + "';";
+        // String query = "SELECT UUID\n" + "FROM " + tableName + "\n" + "WHERE UUID LIKE '" +
+        // UUID + "';";
         String query = "SELECT UUID FROM " + tableName + " WHERE UUID LIKE '" + UUID + "';";
 
         // Try to execute the query to the xp bank database.
-        try (Statement statement = conn.createStatement(); ResultSet result = statement.executeQuery(query)) {
+        try (Statement statement = conn.createStatement(); ResultSet result =
+                statement.executeQuery(query)) {
             // Check if the player is in the xp bank database.
             return result.next();
         }
-        // An error occurred executing the query to the database, or while checking if the player is in the xp bank database.
+        // An error occurred executing the query to the database, or while checking if the player
+        // is in the xp bank database.
         catch (SQLException e) {
             EverythingPlugin.getEPLogger().severe("An error occurred while checking if " + player.getName() + " was in the xp bank database.");
             EverythingPlugin.getEPLogger().severe(e.getMessage());
@@ -126,7 +133,7 @@ public class XpBankDatabase {
     }
 
     /**
-     * Gets the balance of a player's xp bank.
+     * Gets the balance of a player's xp bank if the player is in the xp bank database.
      *
      * @param player The player to get the xp bank balance for.
      *
@@ -136,17 +143,20 @@ public class XpBankDatabase {
         // Declare and initialize the UUID of the player, the query to the database, and the level
         // variable.
         String UUID = player.getUniqueId().toString();
-        // String query = "SELECT UUID, XP\n" + "FROM " + tableName + "\n" + "WHERE UUID LIKE '" + UUID + "';";
+        // String query = "SELECT UUID, XP\n" + "FROM " + tableName + "\n" + "WHERE UUID LIKE '"
+        // + UUID + "';";
         String query = "SELECT UUID, XP FROM " + tableName + " WHERE UUID LIKE '" + UUID + "';";
         int levelsInBank = 0;
 
         // Try to execute the query to the xp bank database and get the player's xp bank balance.
-        try (Statement statement = conn.createStatement(); ResultSet result = statement.executeQuery(query)) {
+        try (Statement statement = conn.createStatement(); ResultSet result =
+                statement.executeQuery(query)) {
             // Get the player's record in the database and get the player's xp bank balance.
             result.next();
             levelsInBank = result.getInt("XP");
         }
-        // An error occurred executing the query to the database, or while getting the player's xp bank balance.
+        // An error occurred executing the query to the database, or while getting the player's
+        // xp bank balance.
         catch (SQLException e) {
             EverythingPlugin.getEPLogger().severe("An error occurred accessing " + player.getName() + "'s balance from the xp bank database.");
             EverythingPlugin.getEPLogger().severe(e.getMessage());
@@ -204,15 +214,18 @@ public class XpBankDatabase {
         }
         // An error occurred while closing the connection to the xp bank database.
         catch (SQLException e) {
-            EverythingPlugin.getEPLogger().severe("An error occurred while closing the xp bank database.");
+            EverythingPlugin.getEPLogger().severe("An error occurred while closing the xp bank " +
+                    "database.");
             EverythingPlugin.getEPLogger().severe(e.getMessage());
         }
 
-        EverythingPlugin.getEPLogger().info("Closed the connection to the xp bank database successfully!");
+        EverythingPlugin.getEPLogger().info("Closed the connection to the xp bank database " +
+                "successfully!");
     }
 
     /**
-     * Creates a new xp bank database file in the EverythingPlugin directory and creates a table in the xp bank database.
+     * Creates a new xp bank database file in the EverythingPlugin directory and creates a table in
+     * the xp bank database.
      */
     private void createXPBankDatabase() {
         // Initialize a string containing the relative path to the xp bank database file.
@@ -224,7 +237,8 @@ public class XpBankDatabase {
             conn = DriverManager.getConnection(localPath);
 
             // Initialize the query for creating a new table.
-            String statement = "CREATE TABLE IF NOT EXISTS " + tableName + " (UUID text UNIQUE,	XP integer CHECK(XP >= 0));";
+            String statement = "CREATE TABLE IF NOT EXISTS " + tableName + " (UUID text UNIQUE,	XP" +
+                    " integer CHECK(XP >= 0));";
             //String statement = "CREATE TABLE IF NOT EXISTS " + tableName + " (\n" + "	UUID " +
             //        "text" +
             //        " " +
@@ -238,19 +252,22 @@ public class XpBankDatabase {
             }
             // An error occurred executing the query to the xp bank database.
             catch (SQLException e) {
-                EverythingPlugin.getEPLogger().severe("An error occurred creating the table for the xp bank database!");
+                EverythingPlugin.getEPLogger().severe("An error occurred creating the table for " +
+                        "the xp bank database!");
                 EverythingPlugin.getEPLogger().severe(e.getMessage());
                 return;
             }
 
             // Check if the creation and connection to the new xp bank database was successful.
             if (conn != null) {
-                EverythingPlugin.getEPLogger().info("Created and connected to the new xp bank database successfully!");
+                EverythingPlugin.getEPLogger().info("Created and connected to the new xp bank " +
+                        "database successfully!");
             }
         }
         // An error occurred creating the xp bank database.
         catch (SQLException e) {
-            EverythingPlugin.getEPLogger().severe("An error occurred creating the new xp bank database!");
+            EverythingPlugin.getEPLogger().severe("An error occurred creating the new xp bank " +
+                    "database!");
             EverythingPlugin.getEPLogger().severe(e.getMessage());
         }
     }
@@ -260,5 +277,7 @@ public class XpBankDatabase {
      *
      * @return True if the xp bank database exists, false otherwise.
      */
-    private boolean xpBankDatabaseExists() { return Files.exists(Paths.get(databasePath)); }
+    private boolean xpBankDatabaseExists() {
+        return Files.exists(Paths.get(databasePath));
+    }
 }

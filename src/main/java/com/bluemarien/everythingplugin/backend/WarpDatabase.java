@@ -6,12 +6,14 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -22,7 +24,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
  * functionality.
  *
  * @author Anthony Farina
- * @version 2020.07.22
+ * @version 2020.07.30
  */
 public class WarpDatabase {
 
@@ -42,7 +44,7 @@ public class WarpDatabase {
         // Make the file object to reference the warp database.
         warpDatabaseFile = new File(warpDatabasePath);
 
-        // Check if the warp database exists.
+        // Check if the warp database already exists.
         if (!warpDatabaseExists()) {
             // Create and initialize a new warp database.
             EverythingPlugin.getEPLogger().info("No warp database detected! Creating a new warp " +
@@ -75,45 +77,54 @@ public class WarpDatabase {
         warpDatabase.set("warps." + warpName + ".yaw", warp.getYaw());
         warpDatabase.set("warps." + warpName + ".pitch", warp.getPitch());
 
-        // Save the warp to the database.
+        // Save the warp to the warp database.
         saveWarpDatabase();
     }
 
     /**
-     * Returns the location of a stored warp, if it exists in the database.
+     * Gets the location of a stored warp if it exists in the database.
      *
      * @param warpName The name of the warp to return the location for.
      *
-     * @return The location of a stored warp or null if the warp doesn't exist in the database.
+     * @return The location of a stored warp or null if the warp doesn't exist in the warp database.
      */
     public Location getWarp(String warpName) {
-        // Check if the warp exists in the database.
+        // Check if the warp exists in the warp database.
         if (warpDatabase.get("warps." + warpName) == null) {
-            // Return null since the warp doesn't exist in the database.
+            // Return null since the warp doesn't exist in the warp database.
             return null;
         }
 
-        // Return the location of the warp.
-        return new Location(
-                Bukkit.getWorld(warpDatabase.getString("warps." + warpName + ".world")),
-                warpDatabase.getDouble("warps." + warpName + ".x"),
-                warpDatabase.getDouble("warps." + warpName + ".y"),
-                warpDatabase.getDouble("warps." + warpName + ".z"),
-                Float.parseFloat(warpDatabase.getString("warps." + warpName + ".yaw")),
-                Float.parseFloat(warpDatabase.getString("warps." + warpName + ".pitch")));
+        // Try to return the location of the warp from the warp database.
+        try {
+            return new Location(
+                    Bukkit.getWorld(Objects.requireNonNull(warpDatabase.getString("warps." + warpName + ".world"))),
+                    warpDatabase.getDouble("warps." + warpName + ".x"),
+                    warpDatabase.getDouble("warps." + warpName + ".y"),
+                    warpDatabase.getDouble("warps." + warpName + ".z"),
+                    Float.parseFloat(Objects.requireNonNull(warpDatabase.getString("warps." + warpName + ".yaw"))),
+                    Float.parseFloat(Objects.requireNonNull(warpDatabase.getString("warps." + warpName + ".pitch"))));
+        }
+        // An error occurred getting the warp location.
+        catch (NullPointerException e) {
+            EverythingPlugin.getEPLogger().severe("An error occurred getting the location of the " +
+                    "warp " + warpName + " from the warp database.");
+            EverythingPlugin.getEPLogger().severe(e.getMessage());
+            return null;
+        }
     }
 
     /**
      * Removes a warp from the warp database. Returns true if the warp was removed successfully, or
      * false if the warp doesn't exist.
      *
-     * @param warpName The warp to remove from the database.
+     * @param warpName The warp to remove from the warp database.
      *
-     * @return True if the warp was removed successfully, false if the warp doesn't exist in the
-     * database.
+     * @return True if the warp was removed successfully, or false if the warp doesn't exist in the
+     * warp database.
      */
     public boolean removeWarp(String warpName) {
-        // Check if the warp exists in the database.
+        // Check if the warp exists in the warp database.
         if (warpDatabase.get("warps." + warpName) == null) {
             return false;
         }
@@ -125,12 +136,17 @@ public class WarpDatabase {
     }
 
     /**
-     * Returns a set of Strings containing all the warp names stored in the database.
+     * Returns a set of Strings containing all the warp names stored in the warp database.
      *
-     * @return A set of Strings containing all the warp names stored in the database.
+     * @return A set of Strings containing all the warp names stored in the warp database.
      */
     public Set<String> listWarps() {
-        return warpDatabase.getConfigurationSection("warps").getKeys(false);
+        // Get the configuration section of warps from the warp database.
+        ConfigurationSection warps = warpDatabase.getConfigurationSection("warps");
+
+        // Return the empty set if there are no warps in the warp database, otherwise return the
+        // set of all warps in the warp database.
+        return warps == null ? Collections.emptySet() : warps.getKeys(false);
     }
 
     /**
@@ -195,7 +211,7 @@ public class WarpDatabase {
             return false;
         }
 
-        // A new warp database was created successfully.
+        // A new warp database file was created successfully. Load and configure the file.
         warpDatabase = YamlConfiguration.loadConfiguration(warpDatabaseFile);
         warpDatabase.createSection("warps");
         EverythingPlugin.getEPLogger().info("Created and connected to the new warp database " +
@@ -206,7 +222,7 @@ public class WarpDatabase {
     /**
      * Checks if a warp database already exists.
      *
-     * @return True if the warp database already exists, false otherwise.
+     * @return True if a warp database already exists, false otherwise.
      */
     private boolean warpDatabaseExists() {
         return Files.exists(Paths.get(warpDatabasePath));
