@@ -17,7 +17,7 @@ import org.bukkit.entity.Player;
  * database.
  *
  * @author Anthony Farina
- * @version 2020.07.29
+ * @version 2020.08.05
  */
 public class Delwarp implements CommandExecutor {
 
@@ -70,14 +70,14 @@ public class Delwarp implements CommandExecutor {
         }
         // Check if the player typed "/delwarp (something)".
         else if (args.length == 1) {
-            // Check if the warp exists in the database.
+            // Check if the warp exists in the warp database.
             if (!warpDB.removeWarp(args[0])) {
                 commandPlayer.sendMessage(ChatColor.RED + "The warp " + args[0] + " does not " +
                         "exist!");
                 return true;
             }
 
-            // The warp was successfully removed from the database.
+            // The warp was successfully removed from the warp database.
             commandPlayer.sendMessage(ChatColor.GOLD + "Warp " + args[0] + " deleted.");
             return true;
         }
