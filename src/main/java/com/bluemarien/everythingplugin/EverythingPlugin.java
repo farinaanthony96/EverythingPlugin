@@ -21,8 +21,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 
 /**
- * This class represents the EverythingPlugin plugin running on a Spigot server. The plugin's
- * description file is named "plugin.yml".
+ * This class represents the EverythingPlugin plugin running on a Spigot server. This registers the
+ * plugin's commands, event listeners, and sets up database objects. The plugin's description file
+ * is named "plugin.yml".
  *
  * Features to add:
  *   - Multihome (admin commands to modify / teleport to other player's homes)
@@ -37,7 +38,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  *
  *
  * @author Anthony Farina
- * @version 2020.07.29
+ * @version 2020.08.05
  */
 public final class EverythingPlugin extends JavaPlugin {
 
@@ -106,7 +107,7 @@ public final class EverythingPlugin extends JavaPlugin {
         // Connect to or create a new multihome database.
         multihomeDB = new MultihomeDatabase();
 
-        // Register event listeners.
+        // Register the event listeners.
         playerJoinListener = new PlayerJoinListener();
         this.getServer().getPluginManager().registerEvents(playerJoinListener, this);
 
@@ -169,7 +170,7 @@ public final class EverythingPlugin extends JavaPlugin {
             try {
                 Files.createDirectory(Paths.get(pluginFolderPath));
             }
-            // Something went wrong creating the EverythingPlugin directory.
+            // An error occurred creating the EverythingPlugin directory.
             catch (IOException e) {
                 logger.info(e.getMessage());
                 return false;
@@ -188,10 +189,10 @@ public final class EverythingPlugin extends JavaPlugin {
      * after adding them here!
      */
     private void loadCommands() {
-        // Set the executor for each command in the plugin description file.
         logger.info("Loading commands...");
 
-        // Register commands with the server.
+        // Register commands with the server by setting the executor for each command in the
+        // plugin description file.
         try {
             Objects.requireNonNull(this.getCommand("heal")).setExecutor(new Heal());
             Objects.requireNonNull(this.getCommand("feed")).setExecutor(new Feed());

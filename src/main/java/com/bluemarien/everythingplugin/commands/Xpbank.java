@@ -18,23 +18,24 @@ import org.bukkit.entity.Player;
  * experience banks, deposit, and withdraw experience levels.
  *
  * @author Anthony Farina
- * @version 2020.07.24
+ * @version 2020.08.05
  */
 public class Xpbank implements CommandExecutor {
 
     /**
-     * This method is run when a player runs the xpbank command.
+     * Executes the given command, returning its success.
      *
-     * @param sender       The entity running the command.
-     * @param command      The command object of this command located in plugin.yml.
-     * @param commandLabel The String that succeeds the "/" symbol in the command.
-     * @param args         An array of arguments as Strings passed to the command. Does not include
-     *                     the command label.
+     * If false is returned, then the "usage" plugin.yml entry for this command (if defined) will be
+     * sent to the player.
      *
-     * @return Returns true if the command was handled successfully, false otherwise.
+     * @param sender  Source of the command
+     * @param command Command which was executed
+     * @param label   Alias of the command which was used
+     * @param args    Passed command arguments
+     *
+     * @return True if a valid command, otherwise false
      */
-    public boolean onCommand(CommandSender sender, Command command, String commandLabel,
-                             String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
         // Check if the command being run is "/xpbank".
         if (!command.getName().equals("xpbank")) {
@@ -51,6 +52,7 @@ public class Xpbank implements CommandExecutor {
         // The entity running the command is a player.
         Player commandPlayer = (Player) sender;
         Permission perms = EverythingPlugin.getPermissions();
+        XpBankDatabase xpBank = EverythingPlugin.getXpBankDatabase();
 
         // Check if the player has the permission to run this command.
         if (!perms.has(commandPlayer, "everythingplugin.xpbank")) {
@@ -58,8 +60,6 @@ public class Xpbank implements CommandExecutor {
                     "command.");
             return true;
         }
-
-        XpBankDatabase xpBank = EverythingPlugin.getXpBankDatabase();
 
         // Check if the player only typed "/xpbank".
         if (args.length == 0) {
@@ -76,7 +76,7 @@ public class Xpbank implements CommandExecutor {
         else if (args.length == 1) {
             // Check if the player typed "/xpbank balance" or "/xpbank b".
             if (args[0].equals("balance") || args[0].equals("b")) {
-                // Return the amount of levels stored in the player's xp bank.
+                // Return the amount of levels stored in the xp bank database for the player.
                 commandPlayer.sendMessage(ChatColor.GOLD + "XP Bank Balance: "
                         + xpBank.getXPBankBalance(commandPlayer));
                 return true;
@@ -111,9 +111,9 @@ public class Xpbank implements CommandExecutor {
         else if (args.length == 2) {
             // Check if the player typed "/xpbank deposit <levels>" or "/xpbank d <levels>".
             if (args[0].equals("deposit") || args[0].equals("d")) {
-                int levelsToDeposit;
-
                 // Try to get a numbered experience level from the first command parameter.
+                int levelsToDeposit = 0;
+
                 try {
                     levelsToDeposit = Integer.parseInt(args[1]);
                 }
@@ -131,14 +131,14 @@ public class Xpbank implements CommandExecutor {
                     return true;
                 }
 
-                // Check if the player is not trying to deposit more levels than they have.
+                // Check if the player is trying to deposit more levels than they have.
                 if (levelsToDeposit > commandPlayer.getLevel()) {
                     commandPlayer.sendMessage(ChatColor.RED + "You don't have that many levels to" +
                             " deposit!");
                     return true;
                 }
 
-                // Deposit levels into the player's xp bank.
+                // Deposit levels into the xp bank database for the player.
                 commandPlayer.setLevel(commandPlayer.getLevel() - levelsToDeposit);
                 xpBank.modifyXPBankBalance(commandPlayer, XpBankDatabase.BankAction.DEPOSIT,
                         levelsToDeposit);
@@ -148,11 +148,11 @@ public class Xpbank implements CommandExecutor {
                         + xpBank.getXPBankBalance(commandPlayer));
                 return true;
             }
-            // Check if the player typed "/xpbank withdraw <levels>".
+            // Check if the player typed "/xpbank withdraw <levels>" or "/xpbank w <levels>".
             else if (args[0].equals("withdraw") || args[0].equals("w")) {
+                // Try to get a numbered experience level from the first command parameter.
                 int levelsToWithdraw;
 
-                // Try to get a numbered experience level from the first command parameter.
                 try {
                     levelsToWithdraw = Integer.parseInt(args[1]);
                 }
@@ -178,7 +178,7 @@ public class Xpbank implements CommandExecutor {
                     return true;
                 }
 
-                // Withdraw levels from the player's xp bank.
+                // Withdraw levels from the xp bank database for the player.
                 xpBank.modifyXPBankBalance(commandPlayer, XpBankDatabase.BankAction.WITHDRAW,
                         levelsToWithdraw);
                 commandPlayer.setLevel(commandPlayer.getLevel() + levelsToWithdraw);

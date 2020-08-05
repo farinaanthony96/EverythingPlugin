@@ -12,29 +12,31 @@ import org.bukkit.inventory.ItemStack;
 
 
 /**
- * This class represents the gift command. This command allows players to send an item (or items) in their main hand to other players on the server.
+ * This class represents the gift command. This command allows players to send an item (or items) in
+ * their main hand to other players on the server.
  *
  * @author Anthony Farina
- * @version 2020.07.24
+ * @version 2020.08.05
  */
 public class Gift implements CommandExecutor {
 
     /**
-     * This method is run when a player runs the feed command.
+     * Executes the given command, returning its success.
      *
-     * @param sender       The entity running the command.
-     * @param command      The command object of this command located in plugin.yml.
-     * @param commandLabel The String that succeeds the "/" symbol in the command.
-     * @param args         An array of arguments as Strings passed to the command. Does not include
-     *                     the command label.
+     * If false is returned, then the "usage" plugin.yml entry for this command (if defined) will be
+     * sent to the player.
      *
-     * @return Returns true if the command was handled successfully, false otherwise.
+     * @param sender  Source of the command
+     * @param command Command which was executed
+     * @param label   Alias of the command which was used
+     * @param args    Passed command arguments
+     *
+     * @return True if a valid command, otherwise false
      */
-    public boolean onCommand(CommandSender sender, Command command, String commandLabel,
-                             String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
         // Check if the command being run is "/gift".
-        if (!commandLabel.equals("gift")) {
+        if (!label.equals("gift")) {
             // The command was not handled properly.
             return false;
         }
@@ -67,6 +69,7 @@ public class Gift implements CommandExecutor {
         }
         // Check if the player typed "/gift (something)".
         else if (args.length == 1) {
+            // Check if the player typed "/gift help" or "/gift ?".
             if (args[0].equals("help") || args[0].equals("?")) {
                 // Show the player the usage of "/gift".
                 commandPlayer.sendMessage(ChatColor.GOLD + "Usage of \"/gift\":");
@@ -78,6 +81,7 @@ public class Gift implements CommandExecutor {
             // Check if the player is trying to gift nothing.
             if (commandPlayer.getInventory().getItemInMainHand().getAmount() == 0) {
                 commandPlayer.sendMessage(ChatColor.RED + "You cannot gift nothing!");
+                return true;
             }
 
             // Get the receiving player from the first command parameter.
@@ -100,8 +104,10 @@ public class Gift implements CommandExecutor {
             ItemStack gift = commandPlayer.getInventory().getItemInMainHand();
             commandPlayer.getInventory().setItemInMainHand(null);
             receiver.getInventory().addItem(gift);
-            commandPlayer.sendMessage(ChatColor.GOLD + "You have gifted " + gift.getAmount() + " " + gift.getType().toString() + " to " + receiver.getName() + ".");
-            receiver.sendMessage(ChatColor.GOLD + "You have been gifted " + gift.getAmount() + " " + gift.getType().toString() + " from " + commandPlayer.getName() + ".");
+            commandPlayer.sendMessage(ChatColor.GOLD + "You have gifted " + gift.getAmount() + " "
+                    + gift.getType().toString() + " to " + receiver.getName() + ".");
+            receiver.sendMessage(ChatColor.GOLD + "You have been gifted " + gift.getAmount() + " "
+                    + gift.getType().toString() + " from " + commandPlayer.getName() + ".");
             return true;
         }
         // Check if the player typed "/gift (something) (something)".
@@ -133,14 +139,17 @@ public class Gift implements CommandExecutor {
             try {
                 amount = Integer.parseInt(args[1]);
             }
+            // The amount given was not a number.
             catch (NumberFormatException ignored) {
-                commandPlayer.sendMessage(ChatColor.RED + "You must provide an amount from 1 to 64!");
+                commandPlayer.sendMessage(ChatColor.RED + "You must provide an amount from 1 to " +
+                        "64!");
                 return true;
             }
 
             // Check if the amount is not between 1 and 64.
             if (!(amount >= 1 && amount <= 64)) {
-                commandPlayer.sendMessage(ChatColor.RED + "You must provide an amount from 1 to 64!");
+                commandPlayer.sendMessage(ChatColor.RED + "You must provide an amount from 1 to " +
+                        "64!");
                 return true;
             }
 
@@ -150,14 +159,16 @@ public class Gift implements CommandExecutor {
                 return true;
             }
 
-            // Gift the receiving player the contents of the sender's main hand.
+            // Gift the receiving player the specified amount of contents of the sender's main hand.
             int originalAmount = commandPlayer.getInventory().getItemInMainHand().getAmount();
             ItemStack gift = commandPlayer.getInventory().getItemInMainHand();
             gift.setAmount(amount);
             commandPlayer.getInventory().getItemInMainHand().setAmount(originalAmount - amount);
             receiver.getInventory().addItem(gift);
-            commandPlayer.sendMessage(ChatColor.GOLD + "You have gifted " + gift.getAmount() + " " + gift.getType().toString() + " to " + receiver.getName() + ".");
-            receiver.sendMessage(ChatColor.GOLD + "You have been gifted " + gift.getAmount() + " " + gift.getType().toString() + " from " + commandPlayer.getName() + ".");
+            commandPlayer.sendMessage(ChatColor.GOLD + "You have gifted " + gift.getAmount() + " "
+                    + gift.getType().toString() + " to " + receiver.getName() + ".");
+            receiver.sendMessage(ChatColor.GOLD + "You have been gifted " + gift.getAmount() + " "
+                    + gift.getType().toString() + " from " + commandPlayer.getName() + ".");
             return true;
         }
         // The player typed more than 2 arguments to the command.
