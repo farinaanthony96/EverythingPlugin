@@ -17,26 +17,27 @@ import org.bukkit.potion.PotionEffectType;
  * This class represents the feed command. The feed command is used to fill a player's hunger bar.
  *
  * @author Anthony Farina
- * @version 2020.07.12
+ * @version 2020.08.05
  */
 public class Feed implements CommandExecutor {
 
     /**
-     * This method is run when a player runs the feed command.
+     * Executes the given command, returning its success.
      *
-     * @param sender       The entity running the command.
-     * @param command      The command object of this command located in plugin.yml.
-     * @param commandLabel The String that succeeds the "/" symbol in the command.
-     * @param args         An array of arguments as Strings passed to the command. Does not include
-     *                     the command label.
+     * If false is returned, then the "usage" plugin.yml entry for this command (if defined) will be
+     * sent to the player.
      *
-     * @return Returns true if the command was handled successfully, false otherwise.
+     * @param sender  Source of the command
+     * @param command Command which was executed
+     * @param label   Alias of the command which was used
+     * @param args    Passed command arguments
+     *
+     * @return True if a valid command, otherwise false
      */
-    public boolean onCommand(CommandSender sender, Command command, String commandLabel,
-                             String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
         // Check if the command being run is "/feed".
-        if (!commandLabel.equals("feed")) {
+        if (!label.equals("feed")) {
             // The command was not handled properly.
             return false;
         }
@@ -102,8 +103,8 @@ public class Feed implements CommandExecutor {
 
     /**
      * This method feeds the provided player by removing the hunger potion effect, setting their
-     * food level to 20 (the default maximum), and setting their saturation to 14 (the default
-     * maximum).
+     * food level to 20 (the default maximum for players), and setting their saturation to 14 (the
+     * default maximum for players).
      *
      * @param player The player to feed.
      */
