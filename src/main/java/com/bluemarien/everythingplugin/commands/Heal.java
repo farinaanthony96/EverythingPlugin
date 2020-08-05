@@ -18,26 +18,27 @@ import org.bukkit.potion.PotionEffectType;
  * This class represents the heal command. This command is used to heal a player to full health.
  *
  * @author Anthony Farina
- * @version 2020.07.12
+ * @version 2020.08.05
  */
 public class Heal implements CommandExecutor {
 
     /**
-     * This method is run when a player runs the heal command.
+     * Executes the given command, returning its success.
      *
-     * @param sender       The entity running the command.
-     * @param command      The command object of this command located in plugin.yml.
-     * @param commandLabel The String that succeeds the "/" symbol in the command.
-     * @param args         An array of arguments as Strings passed to the command. Does not include
-     *                     the command label.
+     * If false is returned, then the "usage" plugin.yml entry for this command (if defined) will be
+     * sent to the player.
      *
-     * @return Returns true if the command was handled successfully, false otherwise.
+     * @param sender  Source of the command
+     * @param command Command which was executed
+     * @param label   Alias of the command which was used
+     * @param args    Passed command arguments
+     *
+     * @return True if a valid command, otherwise false
      */
-    public boolean onCommand(CommandSender sender, Command command, String commandLabel,
-                             String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
         // Check if the command being run is "/heal".
-        if (!commandLabel.equals("heal")) {
+        if (!label.equals("heal")) {
             // The command was not handled properly.
             return false;
         }
@@ -102,7 +103,7 @@ public class Heal implements CommandExecutor {
 
     /**
      * This method heals the provided player by removing fire damage, removing the harm, poison, and
-     * wither effects, and setting their health to 20 (the default maximum health for a player).
+     * wither effects, and setting their health to 20 (the default maximum health for players).
      *
      * @param player The player to heal.
      */

@@ -62,7 +62,7 @@ public class Feed implements CommandExecutor {
                 return true;
             }
 
-            // Feed the player.
+            // Feed the player running the command.
             feedPlayer(commandPlayer);
             commandPlayer.sendMessage(ChatColor.GOLD + "You have been fed.");
             return true;
