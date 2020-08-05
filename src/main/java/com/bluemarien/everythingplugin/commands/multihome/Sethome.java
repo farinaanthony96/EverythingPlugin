@@ -15,28 +15,30 @@ import org.bukkit.entity.Player;
 /**
  * This class represents the sethome command. The default home location for a player can be set
  * using "/sethome" or a home labeled with a home name can be set with "/sethome (home name)". The
- * homes set can be teleported to using the "/home" command.
+ * homes set can be teleported to using the home command.
  *
  * @author Anthony Farina
- * @version 2020.07.28
+ * @version 2020.08.05
  */
 public class Sethome implements CommandExecutor {
 
     /**
-     * This method is run when a player runs the sethome command.
+     * Executes the given command, returning its success.
      *
-     * @param sender       The entity running the command.
-     * @param command      The command object of this command located in plugin.yml.
-     * @param commandLabel The String that succeeds the "/" symbol in the command.
-     * @param args         An array of arguments as Strings passed to the command. Does not include
-     *                     the command label.
+     * If false is returned, then the "usage" plugin.yml entry for this command (if defined) will be
+     * sent to the player.
      *
-     * @return Returns true if the command was handled successfully, false otherwise.
+     * @param sender  Source of the command
+     * @param command Command which was executed
+     * @param label   Alias of the command which was used
+     * @param args    Passed command arguments
+     *
+     * @return True if a valid command, otherwise false.
      */
-    public boolean onCommand(CommandSender sender, Command command, String commandLabel,
-                             String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+
         // Check if the command being run is "/sethome".
-        if (!commandLabel.equals("sethome")) {
+        if (!label.equals("sethome")) {
             // The command was not handled properly.
             return false;
         }
@@ -62,7 +64,7 @@ public class Sethome implements CommandExecutor {
 
         // Check if the player typed "/sethome".
         if (args.length == 0) {
-            // Insert a new home into the multihome database.
+            // Insert a new default home into the multihome database for the player.
             multihomeDB.insertHome(commandPlayer.getUniqueId().toString(),
                     commandPlayer.getLocation(), "[default]");
             commandPlayer.sendMessage(ChatColor.GOLD + "Your default home has been created. Type " +
