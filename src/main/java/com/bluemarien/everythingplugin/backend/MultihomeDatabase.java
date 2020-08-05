@@ -47,7 +47,8 @@ public class MultihomeDatabase {
         // Check if the multihome database exists.
         if (!multihomeDatabaseExists()) {
             // Create and initialize a new multihome database.
-            EverythingPlugin.getEPLogger().info("No multihome database detected! Creating a new multihome database...");
+            EverythingPlugin.getEPLogger().info("No multihome database detected! Creating a new " +
+                    "multihome database...");
             createMultihomeDatabase();
         }
         // The multihome database exists.
@@ -55,7 +56,8 @@ public class MultihomeDatabase {
             // Load the existing multihome database.
             EverythingPlugin.getEPLogger().info("Connecting to the existing multihome database...");
             multihomeDatabase = YamlConfiguration.loadConfiguration(multihomeDatabaseFile);
-            EverythingPlugin.getEPLogger().info("Connected to the existing multihome database successfully!");
+            EverythingPlugin.getEPLogger().info("Connected to the existing multihome database " +
+                    "successfully!");
         }
     }
 
@@ -70,12 +72,14 @@ public class MultihomeDatabase {
     public void insertHome(String playerUUID, Location home, String homeName) {
         // Insert the home location into the multihome database labeled with the provided home
         // name for the provided player UUID.
-        multihomeDatabase.set("multihomes." + playerUUID + "." + homeName + ".world", Objects.requireNonNull(home.getWorld()).getName());
+        multihomeDatabase.set("multihomes." + playerUUID + "." + homeName + ".world",
+                Objects.requireNonNull(home.getWorld()).getName());
         multihomeDatabase.set("multihomes." + playerUUID + "." + homeName + ".x", home.getX());
         multihomeDatabase.set("multihomes." + playerUUID + "." + homeName + ".y", home.getY());
         multihomeDatabase.set("multihomes." + playerUUID + "." + homeName + ".z", home.getZ());
         multihomeDatabase.set("multihomes." + playerUUID + "." + homeName + ".yaw", home.getYaw());
-        multihomeDatabase.set("multihomes." + playerUUID + "." + homeName + ".pitch", home.getPitch());
+        multihomeDatabase.set("multihomes." + playerUUID + "." + homeName + ".pitch",
+                home.getPitch());
 
         // Save the home to the multihome database.
         saveMultihomeDatabase();
@@ -87,7 +91,8 @@ public class MultihomeDatabase {
      * @param playerUUID The UUID of the player to return a home for.
      * @param homeName   The name of the home to return the location for.
      *
-     * @return The location of a stored home or null if the home doesn't exist in the multihome database.
+     * @return The location of a stored home or null if the home doesn't exist in the multihome
+     * database.
      */
     public Location getHome(String playerUUID, String homeName) {
         // Check if the home exists in the multihome database.
@@ -139,9 +144,12 @@ public class MultihomeDatabase {
      */
     public Set<String> listHomes(String playerUUID) {
         // Get the section of homes from the multihome database for the player.
-        ConfigurationSection homes = multihomeDatabase.getConfigurationSection("multihomes." + playerUUID);
+        ConfigurationSection homes =
+                multihomeDatabase.getConfigurationSection("multihomes." + playerUUID);
 
-        // Return the empty set if there are no homes in the multihome database for the provided player UUID, otherwise return the set of all homes for the provided player UUID in the multihome database.
+        // Return the empty set if there are no homes in the multihome database for the provided
+        // player UUID, otherwise return the set of all homes for the provided player UUID in the
+        // multihome database.
         return homes == null ? Collections.emptySet() : homes.getKeys(false);
     }
 
@@ -157,7 +165,8 @@ public class MultihomeDatabase {
         }
         // An error occurred while trying to save the multihome database.
         catch (IOException e) {
-            EverythingPlugin.getEPLogger().info(ChatColor.RED + "An error occurred saving the multihome database file!");
+            EverythingPlugin.getEPLogger().info(ChatColor.RED + "An error occurred saving the " +
+                    "multihome database file!");
             return false;
         }
 
@@ -179,7 +188,8 @@ public class MultihomeDatabase {
         }
         // An error occurred while trying to reload the multihome database.
         catch (IllegalArgumentException e) {
-            EverythingPlugin.getEPLogger().info(ChatColor.RED + "An error occurred reloading the multihome database file!");
+            EverythingPlugin.getEPLogger().info(ChatColor.RED + "An error occurred reloading the " +
+                    "multihome database file!");
             return false;
         }
 
@@ -200,14 +210,16 @@ public class MultihomeDatabase {
         }
         // An error occurred while creating a new multihome database file.
         catch (IOException e) {
-            EverythingPlugin.getEPLogger().info(ChatColor.RED + "An error occurred creating the multihome database!");
+            EverythingPlugin.getEPLogger().info(ChatColor.RED + "An error occurred creating the " +
+                    "multihome database!");
             return false;
         }
 
         // A new multihome database file was created successfully. Load and configure the file.
         multihomeDatabase = YamlConfiguration.loadConfiguration(multihomeDatabaseFile);
         multihomeDatabase.createSection("multihomes");
-        EverythingPlugin.getEPLogger().info("Created and connected to the new multihome database successfully!");
+        EverythingPlugin.getEPLogger().info("Created and connected to the new multihome database " +
+                "successfully!");
         return true;
     }
 
@@ -216,5 +228,7 @@ public class MultihomeDatabase {
      *
      * @return True if the multihome database already exists, false otherwise.
      */
-    private boolean multihomeDatabaseExists() { return Files.exists(Paths.get(multihomeDatabasePath)); }
+    private boolean multihomeDatabaseExists() {
+        return Files.exists(Paths.get(multihomeDatabasePath));
+    }
 }

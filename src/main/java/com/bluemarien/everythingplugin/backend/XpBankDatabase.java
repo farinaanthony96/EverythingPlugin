@@ -237,7 +237,8 @@ public class XpBankDatabase {
             conn = DriverManager.getConnection(localPath);
 
             // Initialize the query for creating a new table.
-            String statement = "CREATE TABLE IF NOT EXISTS " + tableName + " (UUID text UNIQUE,	XP" +
+            String statement = "CREATE TABLE IF NOT EXISTS " + tableName + " (UUID text UNIQUE,	" +
+                    "XP" +
                     " integer CHECK(XP >= 0));";
             //String statement = "CREATE TABLE IF NOT EXISTS " + tableName + " (\n" + "	UUID " +
             //        "text" +

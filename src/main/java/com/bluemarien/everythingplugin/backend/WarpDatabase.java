@@ -224,5 +224,7 @@ public class WarpDatabase {
      *
      * @return True if a warp database already exists, false otherwise.
      */
-    private boolean warpDatabaseExists() { return Files.exists(Paths.get(warpDatabasePath)); }
+    private boolean warpDatabaseExists() {
+        return Files.exists(Paths.get(warpDatabasePath));
+    }
 }

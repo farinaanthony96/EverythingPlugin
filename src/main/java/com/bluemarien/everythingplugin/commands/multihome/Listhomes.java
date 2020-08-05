@@ -19,26 +19,27 @@ import org.bukkit.entity.Player;
  * player.
  *
  * @author Anthony Farina
- * @version 2020.07.28
+ * @version 2020.08.05
  */
 public class Listhomes implements CommandExecutor {
 
     /**
-     * This method is run when a player runs the feed command.
+     * Executes the given command, returning its success.
      *
-     * @param sender       The entity running the command.
-     * @param command      The command object of this command located in plugin.yml.
-     * @param commandLabel The String that succeeds the "/" symbol in the command.
-     * @param args         An array of arguments as Strings passed to the command. Does not include
-     *                     the command label.
+     * If false is returned, then the "usage" plugin.yml entry for this command (if defined) will be
+     * sent to the player.
      *
-     * @return Returns true if the command was handled successfully, false otherwise.
+     * @param sender  Source of the command
+     * @param command Command which was executed
+     * @param label   Alias of the command which was used
+     * @param args    Passed command arguments
+     *
+     * @return True if a valid command, otherwise false.
      */
-    public boolean onCommand(CommandSender sender, Command command, String commandLabel,
-                             String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
         // Check if the command being run is "/listhomes".
-        if (!commandLabel.equals("listhomes")) {
+        if (!label.equals("listhomes")) {
             // The command was not handled properly.
             return false;
         }
@@ -64,8 +65,8 @@ public class Listhomes implements CommandExecutor {
 
         // Check if the player typed "/listhomes".
         if (args.length == 0) {
-            // Get the list of all the player's home names in the database and prepare the home
-            // list message.
+            // Get the list of all the player's home names in the multihome database and prepare
+            // the home list message.
             Set<String> homeNames = multihomeDB.listHomes(commandPlayer.getUniqueId().toString());
             StringBuilder homeMessage = new StringBuilder(ChatColor.GOLD + "Homes: ");
 
