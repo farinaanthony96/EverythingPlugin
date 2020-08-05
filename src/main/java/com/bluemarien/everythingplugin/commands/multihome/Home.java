@@ -14,31 +14,32 @@ import org.bukkit.entity.Player;
 
 
 /**
- * This class represents the home command. The "/home" command will teleport a player to their
- * default home location, which is set with the "/sethome" command. It will teleport a player to a
- * specific home location if the home name is provided.
+ * This class represents the home command. The home command will teleport a player to their default
+ * home location, which is set with the sethome command. It will teleport a player to a specific
+ * home location if the home name is provided.
  *
  * @author Anthony Farina
- * @version 2020.07.28
+ * @version 2020.08.05
  */
 public class Home implements CommandExecutor {
 
     /**
-     * This method is run when a player runs the home command.
+     * Executes the given command, returning its success.
      *
-     * @param sender       The entity running the command.
-     * @param command      The command object of this command located in plugin.yml.
-     * @param commandLabel The String that succeeds the "/" symbol in the command.
-     * @param args         An array of arguments as Strings passed to the command. Does not include
-     *                     the command label.
+     * If false is returned, then the "usage" plugin.yml entry for this command (if defined) will be
+     * sent to the player.
      *
-     * @return Returns true if the command was handled successfully, false otherwise.
+     * @param sender  Source of the command
+     * @param command Command which was executed
+     * @param label   Alias of the command which was used
+     * @param args    Passed command arguments
+     *
+     * @return True if a valid command, otherwise false.
      */
-    public boolean onCommand(CommandSender sender, Command command, String commandLabel,
-                             String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
         // Check if the command being run is "/home".
-        if (!commandLabel.equals("home")) {
+        if (!label.equals("home")) {
             // The command was not handled properly.
             return false;
         }
@@ -64,11 +65,11 @@ public class Home implements CommandExecutor {
 
         // Check if the player typed "/home".
         if (args.length == 0) {
-            // Get the default home location of the player.
+            // Get the default home location of the player from the multihome database.
             Location defaultHome = multihomeDB.getHome(commandPlayer.getUniqueId().toString(),
                     "[default]");
 
-            // Check if the home exists in the database.
+            // Check if the home exists in the multihome database.
             if (defaultHome == null) {
                 commandPlayer.sendMessage(ChatColor.RED + "Your default home does not exist!");
                 commandPlayer.sendMessage(ChatColor.RED + "Use \"/sethome\" to set a default home" +
@@ -83,10 +84,10 @@ public class Home implements CommandExecutor {
         }
         // Check if the player typed "/home (something)".
         else if (args.length == 1) {
-            // Get the specific home for the player.
+            // Get the specific home for the player from the multihome database.
             Location home = multihomeDB.getHome(commandPlayer.getUniqueId().toString(), args[0]);
 
-            // Check if the home exists.
+            // Check if the home exists in the multihome database.
             if (home == null) {
                 commandPlayer.sendMessage(ChatColor.RED + "The home " + args[0] + " doesn't " +
                         "exist!");
