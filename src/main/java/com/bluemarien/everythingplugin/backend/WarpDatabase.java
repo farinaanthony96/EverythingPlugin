@@ -24,7 +24,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
  * functionality.
  *
  * @author Anthony Farina
- * @version 2020.07.30
+ * @version 2020.08.05
  */
 public class WarpDatabase {
 
@@ -224,7 +224,5 @@ public class WarpDatabase {
      *
      * @return True if a warp database already exists, false otherwise.
      */
-    private boolean warpDatabaseExists() {
-        return Files.exists(Paths.get(warpDatabasePath));
-    }
+    private boolean warpDatabaseExists() { return Files.exists(Paths.get(warpDatabasePath)); }
 }
