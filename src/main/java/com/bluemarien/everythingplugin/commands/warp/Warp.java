@@ -18,7 +18,7 @@ import org.bukkit.entity.Player;
  * location stored in the warp database.
  *
  * @author Anthony Farina
- * @version 2020.07.29
+ * @version 2020.08.05
  */
 public class Warp implements CommandExecutor {
 
@@ -71,10 +71,10 @@ public class Warp implements CommandExecutor {
         }
         // Check if the player typed "/warp (something)".
         else if (args.length == 1) {
-            // Get the location of the warp.
+            // Get the location of the warp from the warp database.
             Location warp = warpDB.getWarp(args[0]);
 
-            // Check if the warp exists in the database.
+            // Check if the warp exists in the warp database.
             if (warp == null) {
                 commandPlayer.sendMessage(ChatColor.RED + "The warp " + args[0] + " does not " +
                         "exist!");
