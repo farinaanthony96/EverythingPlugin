@@ -16,10 +16,10 @@ import org.bukkit.entity.Player;
 
 /**
  * This class represents the listwarps command. This command will list all warps in the warp
- * database to the player.
+ * database for the player.
  *
  * @author Anthony Farina
- * @version 2020.07.29
+ * @version 2020.08.05
  */
 public class Listwarps implements CommandExecutor {
 
@@ -65,7 +65,8 @@ public class Listwarps implements CommandExecutor {
 
         // Check if the player typed "/listwarps".
         if (args.length == 0) {
-            // Get the list of all warp names in the database and prepare the warp list message.
+            // Get the list of all the warp names from the warp database and prepare the warp
+            // list message.
             Set<String> warpNames = warpDB.listWarps();
             StringBuilder warpMessage = new StringBuilder(ChatColor.GOLD + "Warps: ");
 

@@ -65,7 +65,7 @@ public class Listhomes implements CommandExecutor {
 
         // Check if the player typed "/listhomes".
         if (args.length == 0) {
-            // Get the list of all the player's home names in the multihome database and prepare
+            // Get the list of all the player's home names from the multihome database and prepare
             // the home list message.
             Set<String> homeNames = multihomeDB.listHomes(commandPlayer.getUniqueId().toString());
             StringBuilder homeMessage = new StringBuilder(ChatColor.GOLD + "Homes: ");
