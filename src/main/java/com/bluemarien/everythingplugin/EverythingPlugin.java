@@ -27,18 +27,27 @@ import org.bukkit.plugin.java.JavaPlugin;
  *
  * Features to add:
  *   - Multihome (admin commands to modify / teleport to other player's homes)
- *   - Sign modding / coloring
+ *   - Seen command
+ *   - Sign modifying / coloring
  *   - Backpacks
  *   - Mob catching
  *   - Distant farms
  *   - Treecapitator
  *   - Tab complete for all commands
+ *   - Teleport commands for a "/back" command (including /tpa)
+ *   - Repair command
+ *   - Economy
+ *   - Kits
+ *   - Mob Spawning
+ *   - Mail
+ *   - Configuration file
  *
  * Bugs to fix:
+ *   - Trying to add repair cost to the enchantment extraction is buggy
  *
  *
  * @author Anthony Farina
- * @version 2020.08.05
+ * @version 2020.09.26
  */
 public final class EverythingPlugin extends JavaPlugin {
 
@@ -71,6 +80,8 @@ public final class EverythingPlugin extends JavaPlugin {
      * Declare event listeners.
      */
     private PlayerJoinListener playerJoinListener = null;
+    private PrepareAnvilListener prepareAnvilListener = null;
+    private InventoryClickListener inventoryClickListener = null;
 
     /**
      * Declare a reference to the permissions manager for the plugin.
@@ -110,6 +121,11 @@ public final class EverythingPlugin extends JavaPlugin {
         // Register the event listeners.
         playerJoinListener = new PlayerJoinListener();
         this.getServer().getPluginManager().registerEvents(playerJoinListener, this);
+        prepareAnvilListener = new PrepareAnvilListener();
+        this.getServer().getPluginManager().registerEvents(prepareAnvilListener, this);
+        inventoryClickListener = new InventoryClickListener();
+        this.getServer().getPluginManager().registerEvents(inventoryClickListener, this);
+
 
         // Check if an error occurred setting up the plugin's permission system.
         if (!setupPermissions()) {
@@ -151,6 +167,12 @@ public final class EverythingPlugin extends JavaPlugin {
         // Unregister event listeners.
         if (playerJoinListener != null) {
             HandlerList.unregisterAll(playerJoinListener);
+        }
+        if (prepareAnvilListener != null) {
+            HandlerList.unregisterAll(prepareAnvilListener);
+        }
+        if (inventoryClickListener != null) {
+            HandlerList.unregisterAll(inventoryClickListener);
         }
 
         // Disabled the plugin successfully.
@@ -213,6 +235,7 @@ public final class EverythingPlugin extends JavaPlugin {
             logger.severe(e.getMessage());
             logger.severe("An error occurred while loading the commands! Disabling plugin...");
             this.getServer().getPluginManager().disablePlugin(this);
+            return;
         }
 
         logger.info("Commands loaded successfully!");

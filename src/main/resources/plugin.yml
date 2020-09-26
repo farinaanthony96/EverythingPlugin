@@ -22,7 +22,16 @@ commands:
     aliases: [xpb]
   warp:
     description: Teleports players to warp locations.
-    usage: /warp [help | ?] | /warp <list | l> | /warp <warp name> | /warp <create | c> <warp name> | /warp <delete | d> <warp name>
+    usage: /warp <warp name>
+  setwarp:
+    description: Sets a new warp.
+    usage: /setwarp <warp name>
+  delwarp:
+    description: Deletes a warp.
+    usage: /delwarp <warp name>
+  listwarps:
+    description: Lists all the warps.
+    usage: /listwarps
   gift:
     description: Gift items to other players.
     usage: /gift [help | ?] | /gift <player> [amount]
@@ -31,7 +40,7 @@ commands:
     usage: /home [home name]
   sethome:
     description: Sets a new home for the player.
-    usage: /sethome [home name]
+    usage: /sethome <home name>
   delhome:
     description: Deletes a player's home.
     usage: /delhome <home name>
